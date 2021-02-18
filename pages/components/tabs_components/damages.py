@@ -40,7 +40,7 @@ def update_damages_plot(name, timerange):
         timerange, 
         stackgroup={'adapt_costs': 'costs', 'resid_damages': 'costs'},
         yaxis_title='Costs (% GDP)', 
-        tickformat='%'
+        tickformat='p'
     )
     return fig
 
@@ -80,7 +80,7 @@ def update_adaptlevel_plot(name, timerange):
         hidden_variables=['adapt_SAD'],
         height=250,
         yaxis_title='Costs (% GDP)', 
-        tickformat='%',
+        tickformat='p',
         colors=[5,6,7]
     )
     return fig

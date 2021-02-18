@@ -37,7 +37,7 @@ def update_costs_plot(name, timerange):
         timerange, 
         stackgroup={'rel_abatement_costs': 'costs', 'resid_damages': 'costs', 'adapt_costs': 'costs'}, 
         yaxis_title='Costs (% GDP)', 
-        tickformat='%'
+        tickformat='p'
     )
     return fig
 
