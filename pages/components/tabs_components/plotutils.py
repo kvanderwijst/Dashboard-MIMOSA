@@ -1,0 +1,71 @@
+from common.dash import *
+from common import data
+
+import plotly.express as px
+
+def create_plot(df, variables, timerange, stackgroup=None, yaxis_title=None, tickformat=None, height=450):
+
+    selection = df[df['Variable'].isin(variables)]
+    regions = list(selection['Region'].unique())
+
+    traces = []
+
+    for (variable, subselection), color in zip(selection.groupby('Variable'), px.colors.qualitative.Plotly):
+        for i, (region, values) in enumerate(subselection.drop(columns='Variable').set_index('Region').loc[:,str(timerange[0]):str(timerange[1])].iterrows()):
+            traces.append({
+                'type': 'scatter',
+                'x': [float(x) for x in values.index],
+                'y': list(values),
+                'xaxis': f'x{i+1}', 'yaxis': 'y1',
+                'line': {'color': color},
+                'mode': 'lines',
+                'name': variable, 'legendgroup': variable,
+                'showlegend': i==0,
+                'stackgroup': stackgroup,
+            })
+    
+    minyear = float(values.index[0])
+
+    fig = {
+        'data': traces,
+        'layout': {
+            'grid': {
+                'columns': len(regions),
+                'rows': 1
+            },
+            'yaxis1': {'title': yaxis_title},
+            'margin': {'l': 50, 'r': 20, 't': 50, 'b': 50},
+            'legend': {'orientation': 'h', 'x': 0.5, 'xanchor': 'center', 'y': -0.15},
+            'height': height,
+            'annotations': [
+                {
+                    'text': region,
+                    'showarrow': False,
+                    'xref': 'paper', 'yref': 'paper',
+                    'xanchor': 'center', 'yanchor': 'middle',
+                    'x': (i+0.5) / len(regions), 'y': 1.05,
+                    'font': {'size': 16}
+                } for i, region in enumerate(regions)
+            ],
+            'shapes': [
+                {
+                    'type': 'line',
+                    'yref': 'paper', 'xref': f'x{i+1}',
+                    'x0': minyear, 'x1': minyear,
+                    'y0': 0, 'y1': 1,
+                    'line': {'width': 1, 'color': '#666'}
+                }
+                for i in range(len(regions))
+            ]
+        }
+    }
+
+    if tickformat is not None:
+        for i in range(len(regions)):
+            yaxis = f'yaxis{i+1}'
+            if yaxis not in fig['layout']:
+                fig['layout'][yaxis] = {}
+            fig['layout'][yaxis]['tickformat'] = tickformat
+
+    return fig
+
