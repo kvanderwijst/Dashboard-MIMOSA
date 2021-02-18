@@ -8,7 +8,7 @@ app.layout = dbc.Container([
     dcc.Location(id='url', refresh=False),
     html.Div(id='page-content'),
     dcc.Store(id='common-lastmodified-store')
-], className="p-5")  
+], className="p-5", fluid=True)  
 
 
 @app.callback(Output('page-content', 'children'),

@@ -1,4 +1,4 @@
-.h1, h1, .h2, h2, .h3, h3 {
+.h1, h1, .h2, h2, .h3, h3, h4, .h4, h5, .h5 {
     font-weight: 300;
 }
 
@@ -18,4 +18,8 @@
 
 hr.lessmargin {
     margin: 0.3rem 0;
+}
+
+.tabs-plot-container {
+    min-height: 470px;
 }
