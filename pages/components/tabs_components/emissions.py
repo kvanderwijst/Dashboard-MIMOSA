@@ -30,6 +30,7 @@ layout = html.Div([
 ], className='tabs-plot-container')
 
 
+## Regional emissions
 @app.callback(
     Output('tabs-regional-emissions-plot', 'figure'),
     [Input('plot-selected-store', 'data'), Input('plot-timerange', 'value')])
@@ -48,6 +49,7 @@ def update_plot(name, timerange):
     return fig
 
 
+## Global emissions and cumulative emissions
 @app.callback(
     Output('tabs-global-emissions-plot', 'figure'),
     [Input('plot-selected-store', 'data'), Input('plot-timerange', 'value')])
@@ -58,9 +60,31 @@ def update_plot(name, timerange):
     
     fig = plotutils.create_plot(
         df, 
-        ['global_emissions'], 
+        ['global_emissions', 'cumulative_emissions'], 
         timerange, 
-        yaxis_title='Emissions (GtCO<sub>2</sub>/yr)'
+        yaxis_title='Emissions (GtCO<sub>2</sub>/yr)',
+        hidden_variables=['cumulative_emissions'],
+        colors=[2,3]
+    )
+
+    return fig
+
+
+## Temperature
+@app.callback(
+    Output('tabs-global-temperature-plot', 'figure'),
+    [Input('plot-selected-store', 'data'), Input('plot-timerange', 'value')])
+def update_plot(name, timerange):
+    df = data.dataStore.get(name)
+    if df is None:
+        raise PreventUpdate
+    
+    fig = plotutils.create_plot(
+        df, 
+        ['temperature'], 
+        timerange, 
+        yaxis_title='GMST (above pre-industrial)',
+        colors=[4]
     )
 
     return fig

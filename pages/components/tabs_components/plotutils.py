@@ -3,24 +3,28 @@ from common import data
 
 import plotly.express as px
 
-def create_plot(df, variables, timerange, stackgroup=None, yaxis_title=None, tickformat=None, height=450):
+def create_plot(df, variables, timerange, stackgroup=None, yaxis_title=None, tickformat=None, height=450, hidden_variables=[], colors=None):
 
     selection = df[df['Variable'].isin(variables)]
     regions = list(selection['Region'].unique())
 
     traces = []
 
-    for (variable, subselection), color in zip(selection.groupby('Variable'), px.colors.qualitative.Plotly):
-        for i, (region, values) in enumerate(subselection.drop(columns='Variable').set_index('Region').loc[:,str(timerange[0]):str(timerange[1])].iterrows()):
+    for var_i, (variable, subselection) in enumerate(selection.groupby('Variable')):
+
+        color = px.colors.qualitative.Plotly[var_i if colors is None else colors[var_i]]
+
+        for region_i, (region, values) in enumerate(subselection.drop(columns='Variable').set_index('Region').loc[:,str(timerange[0]):str(timerange[1])].iterrows()):
             traces.append({
                 'type': 'scatter',
                 'x': [float(x) for x in values.index],
                 'y': list(values),
-                'xaxis': f'x{i+1}', 'yaxis': 'y1',
+                'xaxis': f'x{region_i+1}', 'yaxis': 'y1',
                 'line': {'color': color},
                 'mode': 'lines',
                 'name': variable, 'legendgroup': variable,
-                'showlegend': i==0,
+                'showlegend': region_i==0,
+                'visible': 'legendonly' if variable in hidden_variables else None,
                 'stackgroup': stackgroup,
             })
     
@@ -61,8 +65,8 @@ def create_plot(df, variables, timerange, stackgroup=None, yaxis_title=None, tic
     }
 
     if tickformat is not None:
-        for i in range(len(regions)):
-            yaxis = f'yaxis{i+1}'
+        for region_i in range(len(regions)):
+            yaxis = f'yaxis{region_i+1}'
             if yaxis not in fig['layout']:
                 fig['layout'][yaxis] = {}
             fig['layout'][yaxis]['tickformat'] = tickformat
