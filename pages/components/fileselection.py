@@ -31,7 +31,7 @@ layout = html.Div([
                 id="plot-timerange",
                 min=2020,
                 max=2100,
-                step=1,
+                step=10,
                 value=[2020, 2100],
                 marks={int(x): str(int(x)) for x in np.arange(2020, 2200, 10)}
             )

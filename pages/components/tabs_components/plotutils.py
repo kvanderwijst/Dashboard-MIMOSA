@@ -3,23 +3,32 @@ from common import data
 
 import plotly.express as px
 
-def create_plot(df, variables, timerange, stackgroup=None, yaxis_title=None, tickformat=None, height=450, hidden_variables=[], colors=None):
+def create_plot(df, variables, timerange, stackgroup=None, yaxis_title='', tickformat=None, height=450, hidden_variables=[], colors=None, percapita=False):
 
     selection = df[df['Variable'].isin(variables)]
     regions = list(selection['Region'].unique())
 
+    regions_to_axis = {region: f'x{i+1}' for i, region in enumerate(regions)}
+
     traces = []
+
+    if percapita:
+        population_factor = df[df['Variable'] == 'population'].drop(columns='Variable').set_index('Region')
+    else:
+        population_factor = 1
 
     for var_i, (variable, subselection) in enumerate(selection.groupby('Variable')):
 
         color = px.colors.qualitative.Plotly[var_i if colors is None else colors[var_i]]
 
-        for region_i, (region, values) in enumerate(subselection.drop(columns='Variable').set_index('Region').loc[:,str(timerange[0]):str(timerange[1])].iterrows()):
+        subselection = subselection.drop(columns='Variable').set_index('Region') / population_factor
+
+        for region_i, (region, values) in enumerate(subselection.loc[:,str(timerange[0]):str(timerange[1])].iterrows()):
             traces.append({
                 'type': 'scatter',
                 'x': [float(x) for x in values.index],
                 'y': list(values),
-                'xaxis': f'x{region_i+1}', 'yaxis': 'y1',
+                'xaxis': regions_to_axis[region], 'yaxis': 'y1',
                 'line': {'color': color},
                 'mode': 'lines',
                 'name': variable, 'legendgroup': variable,
@@ -37,7 +46,7 @@ def create_plot(df, variables, timerange, stackgroup=None, yaxis_title=None, tic
                 'columns': len(regions),
                 'rows': 1
             },
-            'yaxis1': {'title': yaxis_title},
+            'yaxis1': {'title': yaxis_title + (' (per capita) [UNIT?]' if percapita else '')},
             'margin': {'l': 50, 'r': 20, 't': 50, 'b': 50},
             'legend': {'orientation': 'h', 'x': 0.5, 'xanchor': 'center', 'y': -0.15},
             'height': height,

@@ -64,7 +64,8 @@ def update_plot(name, timerange):
         timerange, 
         yaxis_title='Emissions (GtCO<sub>2</sub>/yr)',
         hidden_variables=['cumulative_emissions'],
-        colors=[2,3]
+        colors=[2,3],
+        height=350
     )
 
     return fig
@@ -84,7 +85,8 @@ def update_plot(name, timerange):
         ['temperature'], 
         timerange, 
         yaxis_title='GMST (above pre-industrial)',
-        colors=[4]
+        colors=[4],
+        height=350
     )
 
     return fig
