@@ -3,7 +3,7 @@ from common import data
 
 import plotly.express as px
 
-def create_plot(df, variables, timerange, stackgroup=None, yaxis_title='', tickformat=None, height=450, hidden_variables=[], colors=None, percapita=False):
+def create_plot(df, variables, timerange, stackgroup={}, yaxis_title='', tickformat=None, height=450, hidden_variables=[], colors=None, percapita=False):
 
     selection = df[df['Variable'].isin(variables)]
     regions = list(selection['Region'].unique())
@@ -18,8 +18,9 @@ def create_plot(df, variables, timerange, stackgroup=None, yaxis_title='', tickf
         population_factor = 1
 
     for var_i, (variable, subselection) in enumerate(selection.groupby('Variable')):
-
-        color = px.colors.qualitative.Plotly[var_i if colors is None else colors[var_i]]
+        
+        # Color list * 3 to get the same colours repeated three times, such that it never runs out of range
+        color = (px.colors.qualitative.Plotly*3)[var_i if colors is None else colors[var_i]]
 
         subselection = subselection.drop(columns='Variable').set_index('Region') / population_factor
 
@@ -34,7 +35,7 @@ def create_plot(df, variables, timerange, stackgroup=None, yaxis_title='', tickf
                 'name': variable, 'legendgroup': variable,
                 'showlegend': region_i==0,
                 'visible': 'legendonly' if variable in hidden_variables else None,
-                'stackgroup': stackgroup,
+                'stackgroup': stackgroup.get(variable),
             })
     
     minyear = float(values.index[0])
@@ -47,7 +48,7 @@ def create_plot(df, variables, timerange, stackgroup=None, yaxis_title='', tickf
                 'rows': 1
             },
             'yaxis1': {'title': yaxis_title + (' (per capita) [UNIT?]' if percapita else '')},
-            'margin': {'l': 50, 'r': 20, 't': 50, 'b': 50},
+            'margin': {'l': 50, 'r': 20, 't': 50, 'b': 30},
             'legend': {'orientation': 'h', 'x': 0.5, 'xanchor': 'center', 'y': -0.15},
             'height': height,
             'annotations': [
@@ -56,7 +57,7 @@ def create_plot(df, variables, timerange, stackgroup=None, yaxis_title='', tickf
                     'showarrow': False,
                     'xref': 'paper', 'yref': 'paper',
                     'xanchor': 'center', 'yanchor': 'middle',
-                    'x': (i+0.5) / len(regions), 'y': 1.05,
+                    'x': (i+0.5) / len(regions), 'y': 1+0.05*450/height,
                     'font': {'size': 16}
                 } for i, region in enumerate(regions)
             ],

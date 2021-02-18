@@ -15,6 +15,10 @@ layout = html.Div([
     dcc.Graph(
         id='tabs-costs-carbonprices-plot'
     ),
+    html.H4('Learning factors'),
+    dcc.Graph(
+        id='tabs-costs-learning-plot'
+    ),
 ], className='tabs-plot-container')
 
 
@@ -31,7 +35,7 @@ def update_costs_plot(name, timerange):
         df, 
         ['rel_abatement_costs', 'resid_damages', 'adapt_costs'], 
         timerange, 
-        stackgroup='costs', 
+        stackgroup={'rel_abatement_costs': 'costs', 'resid_damages': 'costs', 'adapt_costs': 'costs'}, 
         yaxis_title='Costs (% GDP)', 
         tickformat='%'
     )
@@ -52,6 +56,25 @@ def update_carbonprices_plot(name, timerange):
         ['carbonprice'], 
         timerange, 
         yaxis_title='TODO',
-        colors=[3]
+        colors=[3],
+        height=250
+    )
+    return fig
+
+## Learning factors
+@app.callback(
+    Output('tabs-costs-learning-plot', 'figure'),
+    [Input('plot-selected-store', 'data'), Input('plot-timerange', 'value')])
+def update_learning_plot(name, timerange):
+    df = data.dataStore.get(name)
+    if df is None:
+        raise PreventUpdate
+
+    fig = plotutils.create_plot(
+        df, 
+        ['learning_factor', 'LBD_factor', 'LOT_factor'], 
+        timerange, 
+        colors=[4, 5, 6],
+        height=250
     )
     return fig

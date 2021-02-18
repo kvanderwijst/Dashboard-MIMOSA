@@ -38,7 +38,8 @@ def update_GDP_plot(name, timerange, percapita):
         ['GDP_gross', 'GDP_net', 'capital_stock', 'consumption'], 
         timerange, 
         yaxis_title='trillion US$2005/yr',
-        percapita=percapita
+        percapita=percapita,
+        hidden_variables=['capital_stock']
     )
     return fig
 
