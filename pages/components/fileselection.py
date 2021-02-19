@@ -7,8 +7,7 @@ from app import app
 
 def all_experiments_options():
     options = []
-    for path in data.get_all_experiments():
-        filename = path.split(data.DATA_DIRECTORY)[1]
+    for filename in data.get_all_experiments():
         options.append({'label': filename, 'value': filename})
     return options
 

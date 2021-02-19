@@ -5,15 +5,22 @@
 ###################
 
 import glob
+import os.path
 import pandas as pd
 
-DATA_DIRECTORY = 'outputdata\\'
+
+DATA_DIRECTORY = '..\\outputdata'
+
+def filename_to_path(filename):
+    # Strip filename of slashes for security
+    filename = filename.replace('/','').replace('\\','')
+    return os.path.join(os.path.dirname(__file__), DATA_DIRECTORY, filename)
 
 
 # Get all available experiments
 def get_all_experiments():
-    filenames = glob.glob(DATA_DIRECTORY+('output_*.csv'))
-    return filenames
+    paths = glob.glob(filename_to_path('output_*.csv'))
+    return [os.path.os.path.basename(path) for path in paths]
 
 
 class DataStore:
@@ -43,7 +50,7 @@ def read_content(filename):
         # First strip all slashes 
         filename = filename.replace('/','').replace('\\','')
 
-        content = pd.read_csv(DATA_DIRECTORY+filename)
+        content = pd.read_csv(filename_to_path(filename))
     except:
         return None
 
