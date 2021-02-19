@@ -9,12 +9,12 @@ import os.path
 import pandas as pd
 
 
-DATA_DIRECTORY = '..\\outputdata'
+DATA_DIRECTORY = 'outputdata'
 
 def filename_to_path(filename):
     # Strip filename of slashes for security
     filename = filename.replace('/','').replace('\\','')
-    return os.path.join(os.path.dirname(__file__), DATA_DIRECTORY, filename)
+    return os.path.join(os.path.dirname(__file__), '..', DATA_DIRECTORY, filename)
 
 print(filename_to_path('*.csv'))
 
@@ -22,6 +22,7 @@ print(filename_to_path('*.csv'))
 def get_all_experiments():
     print(filename_to_path('*.csv'))
     paths = glob.glob(filename_to_path('output_*.csv'))
+    print(paths)
     return [os.path.os.path.basename(path) for path in paths]
 
 
