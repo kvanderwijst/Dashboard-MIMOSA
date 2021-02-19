@@ -3,6 +3,8 @@ from common.dash import *
 from app import app
 from pages import plot
 
+server = app.server
+
 
 app.layout = dbc.Container([
     dcc.Location(id='url', refresh=False),
