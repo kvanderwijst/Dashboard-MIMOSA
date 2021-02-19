@@ -16,13 +16,10 @@ def filename_to_path(filename):
     filename = filename.replace('/','').replace('\\','')
     return os.path.join(os.path.dirname(__file__), '..', DATA_DIRECTORY, filename)
 
-print(filename_to_path('*.csv'))
 
 # Get all available experiments
 def get_all_experiments():
-    print(filename_to_path('*.csv'))
     paths = glob.glob(filename_to_path('output_*.csv'))
-    print(paths)
     return [os.path.os.path.basename(path) for path in paths]
 
 
