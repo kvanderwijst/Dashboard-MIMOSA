@@ -34,9 +34,9 @@ layout = html.Div([
 @app.callback(
     Output('tabs-regional-emissions-plot', 'figure'),
     [Input('plot-selected-store', 'data'), Input('plot-timerange', 'value')])
-def update_plot(name, timerange):
-    df = data.dataStore.get(name)
-    if df is None:
+def update_plot(names, timerange):
+    df = data.dataStore.get(names)
+    if df is None or len(df) == 0:
         raise PreventUpdate
     
     fig = plotutils.create_plot(
@@ -53,9 +53,9 @@ def update_plot(name, timerange):
 @app.callback(
     Output('tabs-global-emissions-plot', 'figure'),
     [Input('plot-selected-store', 'data'), Input('plot-timerange', 'value')])
-def update_plot(name, timerange):
-    df = data.dataStore.get(name)
-    if df is None:
+def update_plot(names, timerange):
+    df = data.dataStore.get(names)
+    if df is None or len(df) == 0:
         raise PreventUpdate
     
     fig = plotutils.create_plot(
@@ -75,9 +75,9 @@ def update_plot(name, timerange):
 @app.callback(
     Output('tabs-global-temperature-plot', 'figure'),
     [Input('plot-selected-store', 'data'), Input('plot-timerange', 'value')])
-def update_plot(name, timerange):
-    df = data.dataStore.get(name)
-    if df is None:
+def update_plot(names, timerange):
+    df = data.dataStore.get(names)
+    if df is None or len(df) == 0:
         raise PreventUpdate
     
     fig = plotutils.create_plot(

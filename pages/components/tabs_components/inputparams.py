@@ -15,8 +15,14 @@ layout = html.Div([
 @app.callback(
     Output('tabs-inputparams-pre', 'children'),
     [Input('plot-selected-store', 'data')])
-def update_params(name):
-    params = data.dataStore.getparams(name)
-    if params is None:
+def update_params(names):
+    all_params = data.dataStore.get(names, params=True)
+    if all_params is None:
         raise PreventUpdate
-    return pprint.pformat(params)
+    html_elements = []
+    for filename, params in all_params.items():
+        html_elements.extend([
+            html.H5(filename),
+            html.Pre(pprint.pformat(params))
+        ])
+    return html_elements

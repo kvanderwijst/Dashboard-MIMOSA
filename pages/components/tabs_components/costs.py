@@ -26,9 +26,9 @@ layout = html.Div([
 @app.callback(
     Output('tabs-costs-plot', 'figure'),
     [Input('plot-selected-store', 'data'), Input('plot-timerange', 'value')])
-def update_costs_plot(name, timerange):
-    df = data.dataStore.get(name)
-    if df is None:
+def update_costs_plot(names, timerange):
+    df = data.dataStore.get(names)
+    if df is None or len(df) == 0:
         raise PreventUpdate
 
     fig = plotutils.create_plot(
@@ -46,9 +46,9 @@ def update_costs_plot(name, timerange):
 @app.callback(
     Output('tabs-costs-carbonprices-plot', 'figure'),
     [Input('plot-selected-store', 'data'), Input('plot-timerange', 'value')])
-def update_carbonprices_plot(name, timerange):
-    df = data.dataStore.get(name)
-    if df is None:
+def update_carbonprices_plot(names, timerange):
+    df = data.dataStore.get(names)
+    if df is None or len(df) == 0:
         raise PreventUpdate
 
     fig = plotutils.create_plot(
@@ -65,9 +65,9 @@ def update_carbonprices_plot(name, timerange):
 @app.callback(
     Output('tabs-costs-learning-plot', 'figure'),
     [Input('plot-selected-store', 'data'), Input('plot-timerange', 'value')])
-def update_learning_plot(name, timerange):
-    df = data.dataStore.get(name)
-    if df is None:
+def update_learning_plot(names, timerange):
+    df = data.dataStore.get(names)
+    if df is None or len(df) == 0:
         raise PreventUpdate
 
     fig = plotutils.create_plot(

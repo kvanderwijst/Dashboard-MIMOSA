@@ -29,9 +29,9 @@ layout = html.Div([
 @app.callback(
     Output('tabs-damages-main-plot', 'figure'),
     [Input('plot-selected-store', 'data'), Input('plot-timerange', 'value')])
-def update_damages_plot(name, timerange):
-    df = data.dataStore.get(name)
-    if df is None:
+def update_damages_plot(names, timerange):
+    df = data.dataStore.get(names)
+    if df is None or len(df) == 0:
         raise PreventUpdate
 
     fig = plotutils.create_plot(
@@ -49,9 +49,9 @@ def update_damages_plot(name, timerange):
 @app.callback(
     Output('tabs-damages-adaptlevel-plot', 'figure'),
     [Input('plot-selected-store', 'data'), Input('plot-timerange', 'value')])
-def update_adaptlevel_plot(name, timerange):
-    df = data.dataStore.get(name)
-    if df is None:
+def update_adaptlevel_plot(names, timerange):
+    df = data.dataStore.get(names)
+    if df is None or len(df) == 0:
         raise PreventUpdate
 
     fig = plotutils.create_plot(
@@ -68,9 +68,9 @@ def update_adaptlevel_plot(name, timerange):
 @app.callback(
     Output('tabs-damages-adaptcosts-plot', 'figure'),
     [Input('plot-selected-store', 'data'), Input('plot-timerange', 'value')])
-def update_adaptlevel_plot(name, timerange):
-    df = data.dataStore.get(name)
-    if df is None:
+def update_adaptlevel_plot(names, timerange):
+    df = data.dataStore.get(names)
+    if df is None or len(df) == 0:
         raise PreventUpdate
 
     fig = plotutils.create_plot(
@@ -90,9 +90,9 @@ def update_adaptlevel_plot(name, timerange):
 @app.callback(
     Output('tabs-damages-SLR-plot', 'figure'),
     [Input('plot-selected-store', 'data'), Input('plot-timerange', 'value')])
-def update_SLR_plot(name, timerange):
-    df = data.dataStore.get(name)
-    if df is None:
+def update_SLR_plot(names, timerange):
+    df = data.dataStore.get(names)
+    if df is None or len(df) == 0:
         raise PreventUpdate
 
     fig = plotutils.create_plot(

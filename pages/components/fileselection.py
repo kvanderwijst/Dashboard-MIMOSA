@@ -17,7 +17,8 @@ layout = html.Div([
         dbc.Col([
             dcc.Dropdown(
                 id="plot-fileselection-filename",
-                options=all_experiments_options()
+                options=all_experiments_options(),
+                multi=True
             )
         ]),
         dbc.Col([dbc.Button('Refresh', color='primary', id='plot-fileselection-refresh')], md=2),
@@ -45,18 +46,18 @@ layout = html.Div([
 @app.callback(
     Output('plot-selected-store', 'data'),
     [Input('plot-fileselection-filename', 'value')])
-def update_store(name):
+def update_store(names):
     # Put database in cache
-    df = data.dataStore.get(name)
-    if df is None:
+    df = data.dataStore.get(names)
+    if df is None or len(df) == 0:
         raise PreventUpdate
-    return name
+    return names
 
 @app.callback(
     Output('plot-timerange', 'max'),
     [Input('plot-fileselection-filename', 'value')])
-def update_range(name):
-    df = data.dataStore.get(name)
-    if df is None:
+def update_range(names):
+    df = data.dataStore.get(names)
+    if df is None or len(df) == 0:
         raise PreventUpdate
-    return max(df.drop(columns=['Variable', 'Region']).columns.to_numpy(dtype='float'))
+    return 2100 # TODO max(df.drop(columns=['Variable', 'Region']).columns.to_numpy(dtype='float'))

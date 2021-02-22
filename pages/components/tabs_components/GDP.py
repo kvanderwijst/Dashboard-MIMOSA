@@ -28,9 +28,9 @@ layout = html.Div([
 @app.callback(
     Output('tabs-GDP-plot', 'figure'),
     [Input('plot-selected-store', 'data'), Input('plot-timerange', 'value'), Input('tabs-GDP-percapita', 'value')])
-def update_GDP_plot(name, timerange, percapita):
-    df = data.dataStore.get(name)
-    if df is None:
+def update_GDP_plot(names, timerange, percapita):
+    df = data.dataStore.get(names)
+    if df is None or len(df) == 0:
         raise PreventUpdate
 
     fig = plotutils.create_plot(
@@ -48,9 +48,9 @@ def update_GDP_plot(name, timerange, percapita):
 @app.callback(
     Output('tabs-GDP-utility-plot', 'figure'),
     [Input('plot-selected-store', 'data'), Input('plot-timerange', 'value')])
-def update_utility_plot(name, timerange):
-    df = data.dataStore.get(name)
-    if df is None:
+def update_utility_plot(names, timerange):
+    df = data.dataStore.get(names)
+    if df is None or len(df) == 0:
         raise PreventUpdate
 
     fig = plotutils.create_plot(

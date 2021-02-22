@@ -36,16 +36,29 @@ class DataStore:
         self.databases = {}
         self.params = {}
 
-    def get(self, filename, force_new=False):
+    def get(self, filenames, params: bool=False):
+        if filenames is None:
+            return None
+        # For each filename in the list, get the corresponding database
+        databases = {}
+        for filename in filenames:
+            db = self.get_single_params(filename) if params else self.get_single_data(filename)
+            if db is not None:
+                databases[filename] = db
+        if len(databases) == 0:
+            return None
+        return databases
+
+    def get_single_data(self, filename):
         # 1. Check if file still needs to be read out
-        if filename not in self.databases or force_new:
+        if filename not in self.databases:
             self.databases[filename] = read_content(filename)
         # 2. Return database from cache
         return self.databases[filename]
 
-    def getparams(self, filename, force_new=False):
+    def get_single_params(self, filename):
         # 1. Check if param file exists and still needs to be read out
-        if filename not in self.params or force_new:
+        if filename not in self.params:
             self.params[filename] = read_param(filename)
         # 2. Return param dict from cache
         return self.params[filename]
