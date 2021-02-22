@@ -23,6 +23,6 @@ def update_params(names):
     for filename, params in all_params.items():
         html_elements.extend([
             html.H5(filename),
-            html.Pre(pprint.pformat(params))
+            html.Pre(pprint.pformat(params['data']))
         ])
     return html_elements

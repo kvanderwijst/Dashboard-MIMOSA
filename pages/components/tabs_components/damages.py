@@ -8,9 +8,7 @@ from app import app
 layout = html.Div([
     html.Br(),
     html.H4('Residual vs gross damage costs, with adaptation costs'),
-    dcc.Graph(
-        id='tabs-damages-main-plot'
-    ),
+    html.Div(id='tabs-damages-main-plots'),
     html.H4('Adaptation level (top) and stock vs flow (bottom):'),
     dcc.Graph(
         id='tabs-damages-adaptlevel-plot'
@@ -19,30 +17,34 @@ layout = html.Div([
         id='tabs-damages-adaptcosts-plot'
     ),
     html.H4('Sea level rise:'),
-    dcc.Graph(
-        id='tabs-damages-SLR-plot'
-    ),
+    html.Div(id='tabs-damages-SLR-plots'),
 ], className='tabs-plot-container')
 
 
 ## Residual vs gross damage costs
 @app.callback(
-    Output('tabs-damages-main-plot', 'figure'),
+    Output('tabs-damages-main-plots', 'children'),
     [Input('plot-selected-store', 'data'), Input('plot-timerange', 'value')])
 def update_damages_plot(names, timerange):
     df = data.dataStore.get(names)
     if df is None or len(df) == 0:
         raise PreventUpdate
 
-    fig = plotutils.create_plot(
-        df, 
-        ['adapt_costs', 'resid_damages', 'gross_damages', 'SLR_damages'], 
-        timerange, 
-        stackgroup={'adapt_costs': 'costs', 'resid_damages': 'costs'},
-        yaxis_title='Costs (% GDP)', 
-        tickformat='p'
-    )
-    return fig
+    figs = [
+        dcc.Graph(
+            figure=plotutils.create_plot(
+                {filename: single_df}, 
+                ['adapt_costs', 'resid_damages', 'gross_damages', 'SLR_damages'], 
+                timerange, 
+                stackgroup={'adapt_costs': 'costs', 'resid_damages': 'costs'},
+                yaxis_title='Costs (% GDP)', 
+                tickformat='p',
+                height=max(150, plotutils.DEFAULT_HEIGHT/len(df))
+            )
+        )
+        for filename, single_df in df.items()
+    ]
+    return figs
 
 
 ## Adaptation level
@@ -88,20 +90,26 @@ def update_adaptlevel_plot(names, timerange):
 
 ## Sea level rise
 @app.callback(
-    Output('tabs-damages-SLR-plot', 'figure'),
+    Output('tabs-damages-SLR-plots', 'children'),
     [Input('plot-selected-store', 'data'), Input('plot-timerange', 'value')])
 def update_SLR_plot(names, timerange):
     df = data.dataStore.get(names)
     if df is None or len(df) == 0:
         raise PreventUpdate
 
-    fig = plotutils.create_plot(
-        df, 
-        ['SLR', 'CUMGSIC', 'CUMGIS', 'total_SLR'], 
-        timerange, 
-        stackgroup={'SLR': 'SLR', 'CUMGSIC': 'SLR', 'CUMGIS': 'SLR'},
-        yaxis_title='SLR (in meter)',
-        hidden_variables=['total_SLR'],
-        colors=[8,9,10,11]
-    )
-    return fig
+    figs = [
+        dcc.Graph(
+            figure=plotutils.create_plot(
+                {filename: single_df}, 
+                ['SLR', 'CUMGSIC', 'CUMGIS', 'total_SLR'], 
+                timerange, 
+                stackgroup={'SLR': 'SLR', 'CUMGSIC': 'SLR', 'CUMGIS': 'SLR'},
+                yaxis_title='SLR (in meter)',
+                hidden_variables=['total_SLR'],
+                colors=[8,9,10,11],
+                height=max(150, plotutils.DEFAULT_HEIGHT/len(df))
+            )
+        )
+        for filename, single_df in df.items()
+    ]
+    return figs

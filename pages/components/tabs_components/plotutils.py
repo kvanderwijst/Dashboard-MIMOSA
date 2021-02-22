@@ -3,16 +3,16 @@ from common import data
 
 import plotly.express as px
 
-def create_plot(df_dict, variables, timerange, stackgroup={}, yaxis_title='', tickformat=None, height=450, hidden_variables=[], colors=None, percapita=False):
+DEFAULT_HEIGHT = 400
 
-    filenames = list(df_dict.keys())
-    databases = list(df_dict.values())
-
-    possible_line_styles = ['solid', 'dot', 'dash', 'dashdot', 'longdash', 'longdashdot']
+def create_plot(df_dict, variables, timerange, stackgroup={}, yaxis_title='', tickformat=None, height=DEFAULT_HEIGHT, hidden_variables=[], colors=None, percapita=False):
 
     traces = []
 
-    for df_i, (df, line_dash) in enumerate(zip(databases, possible_line_styles)):
+    for df_i, df_info in enumerate(df_dict.values()):
+
+        df = df_info['data']
+        line_dash = df_info['meta']['line_dash']
 
         selection = df[df['Variable'].isin(variables)]
         regions = list(selection['Region'].unique())
@@ -55,7 +55,7 @@ def create_plot(df_dict, variables, timerange, stackgroup={}, yaxis_title='', ti
                 'rows': 1
             },
             'yaxis1': {'title': yaxis_title + (' (per capita) [UNIT?]' if percapita else '')},
-            'margin': {'l': 50, 'r': 20, 't': 50, 'b': 30},
+            'margin': {'l': 50, 'r': 20, 't': 30, 'b': 30},
             'legend': {'orientation': 'h', 'x': 0.5, 'xanchor': 'center', 'y': -0.15},
             'height': height,
             'annotations': [

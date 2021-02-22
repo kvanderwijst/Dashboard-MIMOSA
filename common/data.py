@@ -11,6 +11,7 @@ import pandas as pd
 
 
 DATA_DIRECTORY = 'outputdata'
+LINE_STYLES = ['solid', 'dot', 'dash', 'dashdot', 'longdash', 'longdashdot']
 
 def filename_to_path(filename):
     # Strip filename of slashes for security
@@ -41,10 +42,15 @@ class DataStore:
             return None
         # For each filename in the list, get the corresponding database
         databases = {}
-        for filename in filenames:
+        for filename, line_dash in zip(filenames, LINE_STYLES):
             db = self.get_single_params(filename) if params else self.get_single_data(filename)
             if db is not None:
-                databases[filename] = db
+                databases[filename] = {
+                    'data': db,
+                    'meta': {
+                        'line_dash': line_dash
+                    }
+                }
         if len(databases) == 0:
             return None
         return databases
