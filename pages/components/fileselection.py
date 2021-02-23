@@ -54,6 +54,25 @@ def update_store(names):
     return names
 
 @app.callback(
+    Output('plot-fileselection-filename', 'options'),
+    [Input('plot-fileselection-refresh', 'n_clicks')])
+def update_options(n):
+    if n is None or n == 0: 
+        raise PreventUpdate
+    else:
+        data.dataStore.reset()
+        return all_experiments_options()
+
+@app.callback(
+    Output('plot-fileselection-filename', 'value'),
+    [Input('plot-fileselection-refresh', 'n_clicks')])
+def update_options(n):
+    if n is None or n == 0: 
+        raise PreventUpdate
+    else:
+        return []
+
+@app.callback(
     Output('plot-timerange', 'max'),
     [Input('plot-fileselection-filename', 'value')])
 def update_range(names):
