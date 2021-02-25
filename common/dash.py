@@ -1,9 +1,8 @@
-###################
-#
-# Common Dash objects
-#
-###################
+"""
+Common Dash objects
+"""
 
+# pylint: disable=unused-import
 import dash
 import dash_core_components as dcc
 import dash_bootstrap_components as dbc
