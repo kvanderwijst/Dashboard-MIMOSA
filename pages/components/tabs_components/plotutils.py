@@ -1,6 +1,6 @@
 """
 Provides the function `create_plot` used in all the tabs.
-This function loops over the provided databases (for different line dash styles), 
+This function loops over the provided databases (for different line dash styles),
 then loops over the available regions as subplots and finally loops over the provided
 variables in different colours.
 """
@@ -14,11 +14,11 @@ def create_plot(
     df_dict,
     variables,
     timerange,
-    stackgroup={},
+    stackgroup=None,
     yaxis_title="",
     tickformat=None,
     height=DEFAULT_HEIGHT,
-    hidden_variables=[],
+    hidden_variables=None,
     colors=None,
     percapita=False,
 ):
@@ -46,7 +46,8 @@ def create_plot(
 
         for var_i, (variable, subselection) in enumerate(selection.groupby("Variable")):
 
-            # Color list * 3 to get the same colours repeated three times, such that it never runs out of range
+            # Color list * 3 to get the same colours repeated three times,
+            # such that it never runs out of range
             color = (px.colors.qualitative.Plotly * 3)[
                 var_i if colors is None else colors[var_i]
             ]
@@ -72,13 +73,13 @@ def create_plot(
                         "legendgroup": variable,
                         "showlegend": region_i == 0 and df_i == 0,
                         "visible": "legendonly"
-                        if variable in hidden_variables
+                        if hidden_variables is not None and variable in hidden_variables
                         else None,
-                        "stackgroup": stackgroup.get(variable),
+                        "stackgroup": getattr(stackgroup, variable, None),
                     }
                 )
 
-        minyear = float(values.index[0])
+    minyear = float(timerange[0])
 
     fig = {
         "data": traces,
