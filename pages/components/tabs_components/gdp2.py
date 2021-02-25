@@ -1,3 +1,8 @@
+"""
+Tab for the GDP plots:
+ - GDP, capital stock and consumption with absolute vs per capita switch
+ - Utility
+"""
 from common.dash import dcc, dbc, html, Input, Output, PreventUpdate
 from common import data
 
@@ -35,7 +40,7 @@ layout = html.Div(
         Input("tabs-GDP-percapita", "value"),
     ],
 )
-def update_GDP_plot(names, timerange, percapita):
+def update_gdp_plot(names, timerange, percapita):
     databases = data.dataStore.get(names)
     if databases is None or len(databases) == 0:
         raise PreventUpdate

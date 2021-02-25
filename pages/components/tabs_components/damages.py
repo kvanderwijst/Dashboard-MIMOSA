@@ -1,4 +1,12 @@
-from common.dash import dash, dcc, dbc, html, Input, Output, PreventUpdate
+"""
+Tab for the Damages plots:
+ - Residual vs gross damages + adapt costs
+ - Adaptation level
+ - Stock vs flow adaptation
+ - Sea level rise
+"""
+
+from common.dash import dcc, html, Input, Output, PreventUpdate
 from common import data
 
 from pages.components.tabs_components import plotutils
@@ -26,8 +34,8 @@ layout = html.Div(
     [Input("plot-selected-store", "data"), Input("plot-timerange", "value")],
 )
 def update_damages_plot(names, timerange):
-    df = data.dataStore.get(names)
-    if df is None or len(df) == 0:
+    databases = data.dataStore.get(names)
+    if databases is None or len(databases) == 0:
         raise PreventUpdate
 
     figs = [
@@ -39,10 +47,10 @@ def update_damages_plot(names, timerange):
                 stackgroup={"adapt_costs": "costs", "resid_damages": "costs"},
                 yaxis_title="Costs (% GDP)",
                 tickformat="p",
-                height=max(150, plotutils.DEFAULT_HEIGHT / len(df)),
+                height=max(150, plotutils.DEFAULT_HEIGHT / len(databases)),
             )
         )
-        for filename, single_df in df.items()
+        for filename, single_df in databases.items()
     ]
     return figs
 
@@ -53,11 +61,13 @@ def update_damages_plot(names, timerange):
     [Input("plot-selected-store", "data"), Input("plot-timerange", "value")],
 )
 def update_adaptlevel_plot(names, timerange):
-    df = data.dataStore.get(names)
-    if df is None or len(df) == 0:
+    databases = data.dataStore.get(names)
+    if databases is None or len(databases) == 0:
         raise PreventUpdate
 
-    fig = plotutils.create_plot(df, ["adapt_level"], timerange, colors=[4], height=250)
+    fig = plotutils.create_plot(
+        databases, ["adapt_level"], timerange, colors=[4], height=250
+    )
     return fig
 
 
@@ -67,12 +77,12 @@ def update_adaptlevel_plot(names, timerange):
     [Input("plot-selected-store", "data"), Input("plot-timerange", "value")],
 )
 def update_adaptcosts_plot(names, timerange):
-    df = data.dataStore.get(names)
-    if df is None or len(df) == 0:
+    databases = data.dataStore.get(names)
+    if databases is None or len(databases) == 0:
         raise PreventUpdate
 
     fig = plotutils.create_plot(
-        df,
+        databases,
         ["adapt_FAD", "adapt_IAD", "adapt_SAD"],
         timerange,
         hidden_variables=["adapt_SAD"],
@@ -89,9 +99,9 @@ def update_adaptcosts_plot(names, timerange):
     Output("tabs-damages-SLR-plots", "children"),
     [Input("plot-selected-store", "data"), Input("plot-timerange", "value")],
 )
-def update_SLR_plot(names, timerange):
-    df = data.dataStore.get(names)
-    if df is None or len(df) == 0:
+def update_slr_plot(names, timerange):
+    databases = data.dataStore.get(names)
+    if databases is None or len(databases) == 0:
         raise PreventUpdate
 
     figs = [
@@ -104,9 +114,9 @@ def update_SLR_plot(names, timerange):
                 yaxis_title="SLR (in meter)",
                 hidden_variables=["total_SLR"],
                 colors=[8, 9, 10, 11],
-                height=max(150, plotutils.DEFAULT_HEIGHT / len(df)),
+                height=max(150, plotutils.DEFAULT_HEIGHT / len(databases)),
             )
         )
-        for filename, single_df in df.items()
+        for filename, single_df in databases.items()
     ]
     return figs

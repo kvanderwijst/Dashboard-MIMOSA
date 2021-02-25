@@ -1,4 +1,10 @@
-from common.dash import dash, dcc, dbc, html, Input, Output, PreventUpdate
+"""
+Tab for the Cost plots:
+  - stacked plots with costs
+  - carbon prices
+  - learning factors
+"""
+from common.dash import dcc, html, Input, Output, PreventUpdate
 from common import data
 
 from pages.components.tabs_components import plotutils
@@ -27,8 +33,8 @@ layout = html.Div(
     [Input("plot-selected-store", "data"), Input("plot-timerange", "value")],
 )
 def update_costs_plot(names, timerange):
-    df = data.dataStore.get(names)
-    if df is None or len(df) == 0:
+    databases = data.dataStore.get(names)
+    if databases is None or len(databases) == 0:
         raise PreventUpdate
 
     figs = [
@@ -44,10 +50,10 @@ def update_costs_plot(names, timerange):
                 },
                 yaxis_title="Costs (% GDP)",
                 tickformat="p",
-                height=max(150, plotutils.DEFAULT_HEIGHT / len(df)),
+                height=max(150, plotutils.DEFAULT_HEIGHT / len(databases)),
             )
         )
-        for filename, single_df in df.items()
+        for filename, single_df in databases.items()
     ]
     return figs
 
@@ -58,12 +64,17 @@ def update_costs_plot(names, timerange):
     [Input("plot-selected-store", "data"), Input("plot-timerange", "value")],
 )
 def update_carbonprices_plot(names, timerange):
-    df = data.dataStore.get(names)
-    if df is None or len(df) == 0:
+    databases = data.dataStore.get(names)
+    if databases is None or len(databases) == 0:
         raise PreventUpdate
 
     fig = plotutils.create_plot(
-        df, ["carbonprice"], timerange, yaxis_title="TODO", colors=[3], height=250
+        databases,
+        ["carbonprice"],
+        timerange,
+        yaxis_title="TODO",
+        colors=[3],
+        height=250,
     )
     return fig
 
@@ -74,12 +85,12 @@ def update_carbonprices_plot(names, timerange):
     [Input("plot-selected-store", "data"), Input("plot-timerange", "value")],
 )
 def update_learning_plot(names, timerange):
-    df = data.dataStore.get(names)
-    if df is None or len(df) == 0:
+    databases = data.dataStore.get(names)
+    if databases is None or len(databases) == 0:
         raise PreventUpdate
 
     fig = plotutils.create_plot(
-        df,
+        databases,
         ["learning_factor", "LBD_factor", "LOT_factor"],
         timerange,
         colors=[4, 5, 6],

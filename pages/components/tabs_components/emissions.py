@@ -1,9 +1,10 @@
-from common.dash import dash, dcc, dbc, html, Input, Output, PreventUpdate
+"""
+Plots for the emissions plot
+"""
+from common.dash import dcc, dbc, html, Input, Output, PreventUpdate
 from common import data
 
 from pages.components.tabs_components import plotutils
-
-import plotly.express as px
 
 from app import app
 
@@ -38,12 +39,12 @@ layout = html.Div(
     [Input("plot-selected-store", "data"), Input("plot-timerange", "value")],
 )
 def update_plot_regional_emissions(names, timerange):
-    df = data.dataStore.get(names)
-    if df is None or len(df) == 0:
+    databases = data.dataStore.get(names)
+    if databases is None or len(databases) == 0:
         raise PreventUpdate
 
     fig = plotutils.create_plot(
-        df,
+        databases,
         ["baseline", "regional_emissions"],
         timerange,
         yaxis_title="Emissions (GtCO<sub>2</sub>/yr)",
@@ -58,12 +59,12 @@ def update_plot_regional_emissions(names, timerange):
     [Input("plot-selected-store", "data"), Input("plot-timerange", "value")],
 )
 def update_plot_global_emissions(names, timerange):
-    df = data.dataStore.get(names)
-    if df is None or len(df) == 0:
+    databases = data.dataStore.get(names)
+    if databases is None or len(databases) == 0:
         raise PreventUpdate
 
     fig = plotutils.create_plot(
-        df,
+        databases,
         ["global_emissions", "cumulative_emissions"],
         timerange,
         yaxis_title="Emissions (GtCO<sub>2</sub>/yr)",
@@ -81,12 +82,12 @@ def update_plot_global_emissions(names, timerange):
     [Input("plot-selected-store", "data"), Input("plot-timerange", "value")],
 )
 def update_plot_temperature(names, timerange):
-    df = data.dataStore.get(names)
-    if df is None or len(df) == 0:
+    databases = data.dataStore.get(names)
+    if databases is None or len(databases) == 0:
         raise PreventUpdate
 
     fig = plotutils.create_plot(
-        df,
+        databases,
         ["temperature"],
         timerange,
         yaxis_title="GMST (above pre-industrial)",

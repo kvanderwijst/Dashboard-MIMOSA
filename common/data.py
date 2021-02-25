@@ -1,8 +1,9 @@
-###################
-#
-# Common data functions
-#
-###################
+"""
+Common data functions:
+ - get_all_experiments
+ - filename_to_path (only used internally)
+and the class DataStore.
+"""
 
 import glob
 import json
@@ -10,22 +11,32 @@ import os.path
 import pandas as pd
 
 
-DATA_DIRECTORY = 'outputdata'
-LINE_STYLES = ['solid', 'dot', 'dash', 'dashdot', 'longdash', 'longdashdot']
+DATA_DIRECTORY = "outputdata"
+LINE_STYLES = ["solid", "dot", "dash", "dashdot", "longdash", "longdashdot"]
+
 
 def filename_to_path(filename):
     # Strip filename of slashes for security
-    filename = filename.replace('/','').replace('\\','')
-    return os.path.join(os.path.dirname(__file__), '..', DATA_DIRECTORY, filename)
+    filename = filename.replace("/", "").replace("\\", "")
+    return os.path.join(os.path.dirname(__file__), "..", DATA_DIRECTORY, filename)
 
 
 # Get all available experiments
 def get_all_experiments():
-    paths = glob.glob(filename_to_path('output_*.csv'))
+    paths = glob.glob(filename_to_path("output_*.csv"))
     return [os.path.os.path.basename(path) for path in paths]
 
 
 class DataStore:
+    """Provides the databases for each filename.
+
+    Each time a file is requested by the front end,
+    this class checks if it was already read from the filesystem.
+    If not, it saves the data to memory in the dict `databases`.
+    The subsequent read is the instantaneous.
+
+    Same for params files.
+    """
 
     databases = {}
     params = {}
@@ -37,19 +48,21 @@ class DataStore:
         self.databases = {}
         self.params = {}
 
-    def get(self, filenames, params: bool=False):
+    def get(self, filenames, params: bool = False):
         if filenames is None:
             return None
         # For each filename in the list, get the corresponding database
         databases = {}
         for filename, line_dash in zip(filenames, LINE_STYLES):
-            db = self.get_single_params(filename) if params else self.get_single_data(filename)
-            if db is not None:
+            database = (
+                self.get_single_params(filename)
+                if params
+                else self.get_single_data(filename)
+            )
+            if database is not None:
                 databases[filename] = {
-                    'data': db,
-                    'meta': {
-                        'line_dash': line_dash
-                    }
+                    "data": database,
+                    "meta": {"line_dash": line_dash},
                 }
         if len(databases) == 0:
             return None
@@ -77,11 +90,11 @@ dataStore = DataStore()
 def read_content(filename):
 
     try:
-        # First strip all slashes 
-        filename = filename.replace('/','').replace('\\','')
+        # First strip all slashes
+        filename = filename.replace("/", "").replace("\\", "")
 
         content = pd.read_csv(filename_to_path(filename))
-    except:
+    except FileNotFoundError:
         return None
 
     return content
@@ -91,13 +104,13 @@ def read_content(filename):
 def read_param(filename):
 
     try:
-        # First strip all slashes 
-        filename = filename.replace('/','').replace('\\','') + '.params.json'
+        # First strip all slashes
+        filename = filename.replace("/", "").replace("\\", "") + ".params.json"
 
-        with open(filename_to_path(filename), 'r') as f:
-            content = json.load(f)
+        with open(filename_to_path(filename), "r") as fh:
+            content = json.load(fh)
 
-    except:
+    except FileNotFoundError:
         return None
 
     return content
