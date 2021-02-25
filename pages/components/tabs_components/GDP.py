@@ -1,62 +1,65 @@
-from common.dash import *
+from common.dash import dcc, dbc, html, Input, Output, PreventUpdate
 from common import data
 
 from pages.components.tabs_components import plotutils
 
 from app import app
 
-layout = html.Div([
-    html.Br(),
-    html.H4('GDP, capital stock and consumption:'),
-    dbc.RadioItems(
-        options=[{'label': 'Absolute', 'value': False}, {'label': 'Per capita', 'value': True}],
-        value=False,
-        inline=True,
-        id='tabs-GDP-percapita'
-    ),
-    dcc.Graph(
-        id='tabs-GDP-plot'
-    ),
-    html.H4('Utility:'),
-    dcc.Graph(
-        id='tabs-GDP-utility-plot'
-    ),
-], className='tabs-plot-container')
+layout = html.Div(
+    [
+        html.Br(),
+        html.H4("GDP, capital stock and consumption:"),
+        dbc.RadioItems(
+            options=[
+                {"label": "Absolute", "value": False},
+                {"label": "Per capita", "value": True},
+            ],
+            value=False,
+            inline=True,
+            id="tabs-GDP-percapita",
+        ),
+        dcc.Graph(id="tabs-GDP-plot"),
+        html.H4("Utility:"),
+        dcc.Graph(id="tabs-GDP-utility-plot"),
+    ],
+    className="tabs-plot-container",
+)
 
 
 ## GDP, capital stock and consumption
 @app.callback(
-    Output('tabs-GDP-plot', 'figure'),
-    [Input('plot-selected-store', 'data'), Input('plot-timerange', 'value'), Input('tabs-GDP-percapita', 'value')])
+    Output("tabs-GDP-plot", "figure"),
+    [
+        Input("plot-selected-store", "data"),
+        Input("plot-timerange", "value"),
+        Input("tabs-GDP-percapita", "value"),
+    ],
+)
 def update_GDP_plot(names, timerange, percapita):
-    df = data.dataStore.get(names)
-    if df is None or len(df) == 0:
+    databases = data.dataStore.get(names)
+    if databases is None or len(databases) == 0:
         raise PreventUpdate
 
     fig = plotutils.create_plot(
-        df, 
-        ['GDP_gross', 'GDP_net', 'capital_stock', 'consumption'], 
-        timerange, 
-        yaxis_title='trillion US$2005/yr',
+        databases,
+        ["GDP_gross", "GDP_net", "capital_stock", "consumption"],
+        timerange,
+        yaxis_title="trillion US$2005/yr",
         percapita=percapita,
-        hidden_variables=['capital_stock']
+        hidden_variables=["capital_stock"],
     )
     return fig
 
 
 ## Carbon prices
 @app.callback(
-    Output('tabs-GDP-utility-plot', 'figure'),
-    [Input('plot-selected-store', 'data'), Input('plot-timerange', 'value')])
+    Output("tabs-GDP-utility-plot", "figure"),
+    [Input("plot-selected-store", "data"), Input("plot-timerange", "value")],
+)
 def update_utility_plot(names, timerange):
-    df = data.dataStore.get(names)
-    if df is None or len(df) == 0:
+    databases = data.dataStore.get(names)
+    if databases is None or len(databases) == 0:
         raise PreventUpdate
 
-    fig = plotutils.create_plot(
-        df, 
-        ['utility'], 
-        timerange, 
-        colors=[4]
-    )
+    fig = plotutils.create_plot(databases, ["utility"], timerange, colors=[4])
     return fig

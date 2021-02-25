@@ -1,4 +1,7 @@
-from common.dash import *
+"""
+Creates the main Dash application and provides the external stylesheets
+"""
+from common.dash import dbc, dash
 
 external_stylesheets = [dbc.themes.BOOTSTRAP]
 
