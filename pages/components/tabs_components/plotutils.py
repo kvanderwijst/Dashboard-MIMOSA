@@ -23,6 +23,9 @@ def create_plot(
     percapita=False,
 ):
 
+    if stackgroup is None:
+        stackgroup = {}
+
     traces = []
 
     for df_i, df_info in enumerate(df_dict.values()):
@@ -75,7 +78,7 @@ def create_plot(
                         "visible": "legendonly"
                         if hidden_variables is not None and variable in hidden_variables
                         else None,
-                        "stackgroup": getattr(stackgroup, variable, None),
+                        "stackgroup": stackgroup.get(variable),
                     }
                 )
 
