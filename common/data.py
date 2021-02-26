@@ -24,7 +24,9 @@ def filename_to_path(filename):
 # Get all available experiments
 def get_all_experiments():
     paths = glob.glob(filename_to_path("output_*.csv"))
-    return [os.path.os.path.basename(path) for path in paths]
+    basenames = [os.path.os.path.basename(path) for path in paths]
+    basenames.sort()
+    return basenames
 
 
 class DataStore:

@@ -27,17 +27,17 @@ def create_plot(
 
     for df_i, df_info in enumerate(df_dict.values()):
 
-        df = df_info["data"]
+        database = df_info["data"]
         line_dash = df_info["meta"]["line_dash"]
 
-        selection = df[df["Variable"].isin(variables)]
+        selection = database[database["Variable"].isin(variables)]
         regions = list(selection["Region"].unique())
 
         regions_to_axis = {region: f"x{i+1}" for i, region in enumerate(regions)}
 
         if percapita:
             population_factor = (
-                df[df["Variable"] == "population"]
+                database[database["Variable"] == "population"]
                 .drop(columns="Variable")
                 .set_index("Region")
             )
