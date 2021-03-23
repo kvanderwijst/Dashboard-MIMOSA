@@ -5,7 +5,7 @@ Tab for the Cost plots:
   - learning factors
 """
 from common.dash import dcc, html, Input, Output, PreventUpdate
-from common import data
+from common import data, params
 
 from pages.components.tabs_components import plotutils
 
@@ -19,9 +19,9 @@ layout = html.Div(
         ),
         html.Div(id="tabs-costs-plots"),
         html.H4("Regional carbon prices"),
-        dcc.Graph(id="tabs-costs-carbonprices-plot"),
+        dcc.Graph(id="tabs-costs-carbonprices-plot", className="fixed_height_plot"),
         html.H4("Learning factors"),
-        dcc.Graph(id="tabs-costs-learning-plot"),
+        dcc.Graph(id="tabs-costs-learning-plot", className="fixed_height_plot"),
     ],
     className="tabs-plot-container",
 )
@@ -37,6 +37,7 @@ def update_costs_plot(names, timerange):
     if databases is None or len(databases) == 0:
         raise PreventUpdate
 
+    height = max(150, params.DEFAULT_PLOT_HEIGHT / len(databases))
     figs = [
         dcc.Graph(
             figure=plotutils.create_plot(
@@ -50,8 +51,9 @@ def update_costs_plot(names, timerange):
                 },
                 yaxis_title="Costs (% GDP)",
                 tickformat="p",
-                height=max(150, plotutils.DEFAULT_HEIGHT / len(databases)),
-            )
+                height=height,
+            ),
+            style={"height": f"{height}px"},
         )
         for filename, single_df in databases.items()
     ]
@@ -74,7 +76,7 @@ def update_carbonprices_plot(names, timerange):
         timerange,
         yaxis_title="TODO",
         colors=[3],
-        height=250,
+        height=params.FIXED_PLOT_HEIGHT,
     )
     return fig
 
@@ -94,6 +96,6 @@ def update_learning_plot(names, timerange):
         ["learning_factor", "LBD_factor", "LOT_factor"],
         timerange,
         colors=[4, 5, 6],
-        height=250,
+        height=params.FIXED_PLOT_HEIGHT,
     )
     return fig

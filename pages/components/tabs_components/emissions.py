@@ -2,7 +2,7 @@
 Plots for the emissions plot
 """
 from common.dash import dcc, dbc, html, Input, Output, PreventUpdate
-from common import data
+from common import data, params
 
 from pages.components.tabs_components import plotutils
 
@@ -12,18 +12,24 @@ layout = html.Div(
     [
         html.Br(),
         html.H4("Regional emissions, with baseline:"),
-        dcc.Graph(id="tabs-regional-emissions-plot"),
+        dcc.Graph(id="tabs-regional-emissions-plot", className="fixed_height_plot"),
         html.H4("Global emissions and temperature path:"),
         dbc.Row(
             [
                 dbc.Col(
                     [
-                        dcc.Graph(id="tabs-global-emissions-plot"),
+                        dcc.Graph(
+                            id="tabs-global-emissions-plot",
+                            className="fixed_height_plot",
+                        ),
                     ]
                 ),
                 dbc.Col(
                     [
-                        dcc.Graph(id="tabs-global-temperature-plot"),
+                        dcc.Graph(
+                            id="tabs-global-temperature-plot",
+                            className="fixed_height_plot",
+                        ),
                     ]
                 ),
             ]
@@ -48,6 +54,7 @@ def update_plot_regional_emissions(names, timerange):
         ["baseline", "regional_emissions"],
         timerange,
         yaxis_title="Emissions (GtCO<sub>2</sub>/yr)",
+        height=params.FIXED_PLOT_HEIGHT,
     )
 
     return fig
@@ -70,7 +77,7 @@ def update_plot_global_emissions(names, timerange):
         yaxis_title="Emissions (GtCO<sub>2</sub>/yr)",
         hidden_variables=["cumulative_emissions"],
         colors=[2, 3],
-        height=350,
+        height=params.FIXED_PLOT_HEIGHT,
     )
 
     return fig
@@ -92,7 +99,7 @@ def update_plot_temperature(names, timerange):
         timerange,
         yaxis_title="GMST (above pre-industrial)",
         colors=[4],
-        height=350,
+        height=params.FIXED_PLOT_HEIGHT,
     )
 
     return fig

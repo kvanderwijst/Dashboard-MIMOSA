@@ -7,7 +7,7 @@ Tab for the Damages plots:
 """
 
 from common.dash import dcc, html, Input, Output, PreventUpdate
-from common import data
+from common import data, params
 
 from pages.components.tabs_components import plotutils
 
@@ -19,8 +19,8 @@ layout = html.Div(
         html.H4("Residual vs gross damage costs, with adaptation costs"),
         html.Div(id="tabs-damages-main-plots"),
         html.H4("Adaptation level (top) and stock vs flow (bottom):"),
-        dcc.Graph(id="tabs-damages-adaptlevel-plot"),
-        dcc.Graph(id="tabs-damages-adaptcosts-plot"),
+        dcc.Graph(id="tabs-damages-adaptlevel-plot", className="fixed_height_plot"),
+        dcc.Graph(id="tabs-damages-adaptcosts-plot", className="fixed_height_plot"),
         html.H4("Sea level rise:"),
         html.Div(id="tabs-damages-SLR-plots"),
     ],
@@ -38,6 +38,7 @@ def update_damages_plot(names, timerange):
     if databases is None or len(databases) == 0:
         raise PreventUpdate
 
+    height = max(150, params.DEFAULT_PLOT_HEIGHT / len(databases))
     figs = [
         dcc.Graph(
             figure=plotutils.create_plot(
@@ -47,8 +48,9 @@ def update_damages_plot(names, timerange):
                 stackgroup={"adapt_costs": "costs", "resid_damages": "costs"},
                 yaxis_title="Costs (% GDP)",
                 tickformat="p",
-                height=max(150, plotutils.DEFAULT_HEIGHT / len(databases)),
-            )
+                height=height,
+            ),
+            style={"height": f"{height}px"},
         )
         for filename, single_df in databases.items()
     ]
@@ -66,7 +68,11 @@ def update_adaptlevel_plot(names, timerange):
         raise PreventUpdate
 
     fig = plotutils.create_plot(
-        databases, ["adapt_level"], timerange, colors=[4], height=250
+        databases,
+        ["adapt_level"],
+        timerange,
+        colors=[4],
+        height=params.FIXED_PLOT_HEIGHT,
     )
     return fig
 
@@ -86,7 +92,7 @@ def update_adaptcosts_plot(names, timerange):
         ["adapt_FAD", "adapt_IAD", "adapt_SAD"],
         timerange,
         hidden_variables=["adapt_SAD"],
-        height=250,
+        height=params.FIXED_PLOT_HEIGHT,
         yaxis_title="Costs (% GDP)",
         tickformat="p",
         colors=[5, 6, 7],
@@ -104,6 +110,7 @@ def update_slr_plot(names, timerange):
     if databases is None or len(databases) == 0:
         raise PreventUpdate
 
+    height = max(150, params.DEFAULT_PLOT_HEIGHT / len(databases))
     figs = [
         dcc.Graph(
             figure=plotutils.create_plot(
@@ -114,8 +121,9 @@ def update_slr_plot(names, timerange):
                 yaxis_title="SLR (in meter)",
                 hidden_variables=["total_SLR"],
                 colors=[8, 9, 10, 11],
-                height=max(150, plotutils.DEFAULT_HEIGHT / len(databases)),
-            )
+                height=height,
+            ),
+            style={"height": f"{height}px"},
         )
         for filename, single_df in databases.items()
     ]

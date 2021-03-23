@@ -7,7 +7,7 @@ variables in different colours.
 
 import plotly.express as px
 
-DEFAULT_HEIGHT = 400
+from common import params
 
 
 def create_plot(
@@ -17,7 +17,7 @@ def create_plot(
     stackgroup=None,
     yaxis_title="",
     tickformat=None,
-    height=DEFAULT_HEIGHT,
+    height=params.DEFAULT_PLOT_HEIGHT,
     hidden_variables=None,
     colors=None,
     percapita=False,
