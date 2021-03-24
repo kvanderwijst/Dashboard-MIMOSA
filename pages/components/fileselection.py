@@ -47,7 +47,6 @@ layout = html.Div(
                 ),
             ]
         ),
-        html.Div(id="legend-plot-row"),
         dbc.Row(
             [
                 dbc.Col([html.P("Time range:")], md=1),
@@ -111,62 +110,3 @@ def update_range(names):
             for single_df in databases.values()
         ]
     )
-
-
-@app.callback(
-    Output("legend-plot-row", "children"),
-    [Input("plot-fileselection-filename", "value")],
-)
-def update_legend(names):
-    databases = data.dataStore.get(names)
-    if (
-        databases is None or len(databases) <= 1
-    ):  # Only update when multiple files are selected
-        return []
-
-    fig = {
-        "data": [
-            {
-                "type": "scatter",
-                "x": [None],
-                "y": [None],
-                "mode": "lines",
-                "name": name,
-                "line": {
-                    "color": "black",
-                    "dash": single_df["meta"]["line_dash"],
-                },
-            }
-            for name, single_df in databases.items()
-        ],
-        "layout": {
-            "height": 30 * np.ceil(len(names) / 2),
-            "margin": {"t": 0, "l": 0, "r": 0, "b": 0},
-            "legend": {
-                "orientation": "h",
-                "y": 0.5,
-                "yanchor": "middle",
-            },
-            "paper_bgcolor": "rgba(0,0,0,0)",
-            "plot_bgcolor": "rgba(0,0,0,0)",
-            "xaxis": {
-                "showgrid": False,
-                "zeroline": False,
-                "visible": False,
-            },
-            "yaxis": {
-                "showgrid": False,
-                "zeroline": False,
-                "visible": False,
-            },
-        },
-    }
-
-    return [
-        dbc.Row(
-            [
-                dbc.Col([html.P("Legend:")], md=1),
-                dbc.Col([dcc.Graph(figure=fig)]),
-            ]
-        )
-    ]
