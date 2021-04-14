@@ -115,15 +115,25 @@ def update_slr_plot(names, timerange):
         dcc.Graph(
             figure=plotutils.create_plot(
                 {filename: single_df},
-                ["slr_thermal", "slr_cumgsic", "slr_cumgis", "total_SLR"],
+                [
+                    "SLR",  # Old names
+                    "CUMGSIC",
+                    "CUMGIS",
+                    "slr_thermal",  # New names
+                    "slr_cumgsic",
+                    "slr_cumgis",
+                    "total_SLR",
+                ],
                 timerange,
                 stackgroup={
+                    "SLR": "SLR",
+                    "CUMGSIC": "SLR",
+                    "CUMGIS": "SLR",
                     "slr_thermal": "SLR",
                     "slr_cumgsic": "SLR",
                     "slr_cumgis": "SLR",
                 },
                 yaxis_title="SLR (in meter)",
-                hidden_variables=["total_SLR"],
                 colors=[8, 9, 10, 11],
                 height=height,
             ),
