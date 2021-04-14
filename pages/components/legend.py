@@ -10,7 +10,7 @@ from common.dash import dbc, dcc, Input, Output, html
 
 layout = dbc.Row(
     [
-        dbc.Col(html.P("Legend:"), md=1),
+        dbc.Col(html.P("Differences:"), md=1),
         dbc.Col(html.Div(id="legend-table")),
         dbc.Col([], md=2),
     ]
@@ -18,8 +18,7 @@ layout = dbc.Row(
 
 
 @app.callback(
-    Output("legend-table", "children"),
-    [Input("plot-fileselection-filename", "value")],
+    Output("legend-table", "children"), [Input("plot-fileselection-filename", "value")],
 )
 def update_legend(names):
     all_params = data.dataStore.get(names, params=True)
@@ -34,7 +33,7 @@ def update_legend(names):
         html.Th(create_empty_legend(name, all_params[name]["meta"]["line_dash"]))
         for name in differences.columns
     ]
-    table_header = [html.Thead(html.Tr([html.Td("Differences:")] + headers))]
+    table_header = [html.Thead(html.Tr([html.Td()] + headers))]
 
     rows = [
         html.Tr([html.Th(param)] + [html.Td(str(value)) for value in row])
@@ -55,10 +54,7 @@ def create_empty_legend(name, dash):
                 "y": [None],
                 "mode": "lines",
                 "name": name,
-                "line": {
-                    "color": "black",
-                    "dash": dash,
-                },
+                "line": {"color": "black", "dash": dash,},
                 "showlegend": True,
             }
         ],
@@ -66,23 +62,11 @@ def create_empty_legend(name, dash):
             "height": 30,
             "width": 200,
             "margin": {"t": 0, "l": 0, "r": 0, "b": 0},
-            "legend": {
-                "orientation": "h",
-                "y": 0.5,
-                "yanchor": "middle",
-            },
+            "legend": {"orientation": "h", "y": 0.5, "yanchor": "middle",},
             "paper_bgcolor": "rgba(0,0,0,0)",
             "plot_bgcolor": "rgba(0,0,0,0)",
-            "xaxis": {
-                "showgrid": False,
-                "zeroline": False,
-                "visible": False,
-            },
-            "yaxis": {
-                "showgrid": False,
-                "zeroline": False,
-                "visible": False,
-            },
+            "xaxis": {"showgrid": False, "zeroline": False, "visible": False,},
+            "yaxis": {"showgrid": False, "zeroline": False, "visible": False,},
         },
     }
 
@@ -126,7 +110,7 @@ def recursive_traverse(name, subset, flattened):
             if type(value) == dict:
                 recursive_traverse(newname, value, flattened)
             else:
-                flattened[newname] = value
+                flattened[newname] = str(value)
 
 
 def flatten(dictionary):
