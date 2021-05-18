@@ -12,23 +12,29 @@ layout = html.Div(
     [
         html.Br(),
         html.H4("Regional emissions, with baseline:"),
-        dcc.Graph(id="tabs-regional-emissions-plot", className="fixed_height_plot"),
+        dcc.Loading(
+            dcc.Graph(id="tabs-regional-emissions-plot", className="fixed_height_plot")
+        ),
         html.H4("Global emissions and temperature path:"),
         dbc.Row(
             [
                 dbc.Col(
                     [
-                        dcc.Graph(
-                            id="tabs-global-emissions-plot",
-                            className="fixed_height_plot",
+                        dcc.Loading(
+                            dcc.Graph(
+                                id="tabs-global-emissions-plot",
+                                className="fixed_height_plot",
+                            )
                         ),
                     ]
                 ),
                 dbc.Col(
                     [
-                        dcc.Graph(
-                            id="tabs-global-temperature-plot",
-                            className="fixed_height_plot",
+                        dcc.Loading(
+                            dcc.Graph(
+                                id="tabs-global-temperature-plot",
+                                className="fixed_height_plot",
+                            )
                         ),
                     ]
                 ),

@@ -23,9 +23,9 @@ layout = html.Div(
             inline=True,
             id="tabs-GDP-percapita",
         ),
-        dcc.Graph(id="tabs-GDP-plot"),
+        dcc.Loading(dcc.Graph(id="tabs-GDP-plot")),
         html.H4("Utility:"),
-        dcc.Graph(id="tabs-GDP-utility-plot"),
+        dcc.Loading(dcc.Graph(id="tabs-GDP-utility-plot")),
     ],
     className="tabs-plot-container",
 )

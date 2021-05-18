@@ -19,9 +19,13 @@ layout = html.Div(
         ),
         html.Div(id="tabs-costs-plots"),
         html.H4("Regional carbon prices"),
-        dcc.Graph(id="tabs-costs-carbonprices-plot", className="fixed_height_plot"),
+        dcc.Loading(
+            dcc.Graph(id="tabs-costs-carbonprices-plot", className="fixed_height_plot")
+        ),
         html.H4("Learning factors"),
-        dcc.Graph(id="tabs-costs-learning-plot", className="fixed_height_plot"),
+        dcc.Loading(
+            dcc.Graph(id="tabs-costs-learning-plot", className="fixed_height_plot")
+        ),
     ],
     className="tabs-plot-container",
 )
