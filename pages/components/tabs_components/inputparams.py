@@ -17,15 +17,18 @@ layout = html.Div(
 
 
 @app.callback(
-    Output("tabs-inputparams-pre", "children"), [Input("plot-selected-store", "data")]
+    Output("tabs-inputparams-pre", "children"), [Input("plot-data-store", "data")]
 )
-def update_params(names):
-    all_params = data.dataStore.get(names, params=True)
-    if all_params is None:
+def update_params(databases):
+    if databases is None:
         raise PreventUpdate
     html_elements = []
-    for filename, params in all_params.items():
-        html_elements.extend(
-            [html.H5(filename), html.Pre(pprint.pformat(params["data"]))]
-        )
+    for filename, database in databases.items():
+        if "params" in database["meta"]:
+            html_elements.extend(
+                [
+                    html.H5(filename),
+                    html.Pre(pprint.pformat(database["meta"]["params"])),
+                ]
+            )
     return html_elements
