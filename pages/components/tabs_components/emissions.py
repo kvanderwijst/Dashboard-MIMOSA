@@ -42,10 +42,9 @@ layout = html.Div(
 ## Regional emissions
 @app.callback(
     Output("tabs-regional-emissions-plot", "figure"),
-    [Input("plot-selected-store", "data"), Input("plot-timerange", "value")],
+    [Input("plot-data-store", "data"), Input("plot-timerange", "value")],
 )
-def update_plot_regional_emissions(names, timerange):
-    databases = data.dataStore.get(names)
+def update_plot_regional_emissions(databases, timerange):
     if databases is None or len(databases) == 0:
         raise PreventUpdate
 
@@ -63,10 +62,9 @@ def update_plot_regional_emissions(names, timerange):
 ## Global emissions and cumulative emissions
 @app.callback(
     Output("tabs-global-emissions-plot", "figure"),
-    [Input("plot-selected-store", "data"), Input("plot-timerange", "value")],
+    [Input("plot-data-store", "data"), Input("plot-timerange", "value")],
 )
-def update_plot_global_emissions(names, timerange):
-    databases = data.dataStore.get(names)
+def update_plot_global_emissions(databases, timerange):
     if databases is None or len(databases) == 0:
         raise PreventUpdate
 
@@ -86,10 +84,9 @@ def update_plot_global_emissions(names, timerange):
 ## Temperature
 @app.callback(
     Output("tabs-global-temperature-plot", "figure"),
-    [Input("plot-selected-store", "data"), Input("plot-timerange", "value")],
+    [Input("plot-data-store", "data"), Input("plot-timerange", "value")],
 )
-def update_plot_temperature(names, timerange):
-    databases = data.dataStore.get(names)
+def update_plot_temperature(databases, timerange):
     if databases is None or len(databases) == 0:
         raise PreventUpdate
 

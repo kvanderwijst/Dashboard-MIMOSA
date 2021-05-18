@@ -30,10 +30,9 @@ layout = html.Div(
 ## Regional costs (adaptation+abatement+resid damages)
 @app.callback(
     Output("tabs-costs-plots", "children"),
-    [Input("plot-selected-store", "data"), Input("plot-timerange", "value")],
+    [Input("plot-data-store", "data"), Input("plot-timerange", "value")],
 )
-def update_costs_plot(names, timerange):
-    databases = data.dataStore.get(names)
+def update_costs_plot(databases, timerange):
     if databases is None or len(databases) == 0:
         raise PreventUpdate
 
@@ -42,12 +41,12 @@ def update_costs_plot(names, timerange):
         dcc.Graph(
             figure=plotutils.create_plot(
                 {filename: single_df},
-                ["rel_abatement_costs", "resid_damages", "adapt_costs"],
+                ["rel_abatement_costs", "damage_costs"],  # , "adapt_costs"],
                 timerange,
                 stackgroup={
                     "rel_abatement_costs": "costs",
-                    "resid_damages": "costs",
-                    "adapt_costs": "costs",
+                    "damage_costs": "costs",
+                    # "adapt_costs": "costs",
                 },
                 yaxis_title="Costs (% GDP)",
                 tickformat="p",
@@ -63,10 +62,9 @@ def update_costs_plot(names, timerange):
 ## Carbon prices
 @app.callback(
     Output("tabs-costs-carbonprices-plot", "figure"),
-    [Input("plot-selected-store", "data"), Input("plot-timerange", "value")],
+    [Input("plot-data-store", "data"), Input("plot-timerange", "value")],
 )
-def update_carbonprices_plot(names, timerange):
-    databases = data.dataStore.get(names)
+def update_carbonprices_plot(databases, timerange):
     if databases is None or len(databases) == 0:
         raise PreventUpdate
 
@@ -84,10 +82,9 @@ def update_carbonprices_plot(names, timerange):
 ## Learning factors
 @app.callback(
     Output("tabs-costs-learning-plot", "figure"),
-    [Input("plot-selected-store", "data"), Input("plot-timerange", "value")],
+    [Input("plot-data-store", "data"), Input("plot-timerange", "value")],
 )
-def update_learning_plot(names, timerange):
-    databases = data.dataStore.get(names)
+def update_learning_plot(databases, timerange):
     if databases is None or len(databases) == 0:
         raise PreventUpdate
 

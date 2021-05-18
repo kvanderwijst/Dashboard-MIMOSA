@@ -4,7 +4,6 @@ Provides a table with the differences between the selected scenarios.
 
 import pandas as pd
 from app import app
-from common import data
 from common.dash import dbc, dcc, Input, Output, html
 
 
@@ -18,19 +17,18 @@ layout = dbc.Row(
 
 
 @app.callback(
-    Output("legend-table", "children"), [Input("plot-fileselection-filename", "value")],
+    Output("legend-table", "children"), [Input("plot-data-store", "data")],
 )
-def update_legend(names):
-    all_params = data.dataStore.get(names, params=True)
+def update_legend(databases):
     if (
-        all_params is None or len(all_params) <= 1
+        databases is None or len(databases) <= 1
     ):  # Only update when multiple files are selected
         return []
 
-    differences = param_differences(all_params)
+    differences = param_differences(databases)
 
     headers = [
-        html.Th(create_empty_legend(name, all_params[name]["meta"]["line_dash"]))
+        html.Th(create_empty_legend(name, databases[name]["meta"]["line_dash"]))
         for name in differences.columns
     ]
     table_header = [html.Thead(html.Tr([html.Td()] + headers))]
@@ -76,31 +74,36 @@ def create_empty_legend(name, dash):
 def param_differences(all_params) -> pd.DataFrame:
     # First, flatten the nested parameter dictionaries
     flattened = {
-        name: flatten(single_params["data"])
-        for name, single_params in all_params.items()
+        name: flatten(single_params) for name, single_params in all_params.items()
     }
 
     differences = {}
 
     # Loop through each flattened dict to find differences
-    all_keys = [set(x.keys()) for x in flattened.values()]
+    all_keys = [set(x.keys()) for x in flattened.values() if len(x) > 0]
+
+    if len(all_keys) <= 1:
+        return pd.DataFrame(columns=list(all_params.keys()))
+
     keys_union = set.union(*all_keys)
     keys_intersect = set.intersection(*all_keys)
     keys_difference = keys_union - keys_intersect
 
     for key in keys_intersect:
         # Check if all values are equal
-        unique_values = set(params[key] for params in flattened.values())
+        unique_values = set(
+            params[key] for params in flattened.values() if len(params) > 0
+        )
         if len(unique_values) > 1:
             keys_difference.add(key)
 
     # Loop through each key_difference to get the respective values
     differences = {
-        key: {name: params.get(key, "") for name, params in flattened.items()}
+        key: {name: params.get(key, "(missing)") for name, params in flattened.items()}
         for key in keys_difference
     }
 
-    return pd.DataFrame(differences).T
+    return pd.DataFrame(differences).T.sort_index()
 
 
 def recursive_traverse(name, subset, flattened):
@@ -115,5 +118,6 @@ def recursive_traverse(name, subset, flattened):
 
 def flatten(dictionary):
     flattened = {}
-    recursive_traverse("", dictionary, flattened)
+    if "params" in dictionary["meta"]:
+        recursive_traverse("", dictionary["meta"]["params"], flattened)
     return flattened

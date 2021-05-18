@@ -5,6 +5,8 @@ then loops over the available regions as subplots and finally loops over the pro
 variables in different colours.
 """
 
+import time
+import pandas as pd
 import plotly.express as px
 
 from common import params
@@ -31,6 +33,11 @@ def create_plot(
     for df_i, df_info in enumerate(df_dict.values()):
 
         database = df_info["data"]
+        if isinstance(database, dict):
+            # t0 = time.time()
+            database = pd.DataFrame(database)
+            # t1 = time.time()
+            # print("Took {} seconds".format(t1 - t0))
         line_dash = df_info["meta"]["line_dash"]
 
         selection = database[database["Variable"].isin(variables)]

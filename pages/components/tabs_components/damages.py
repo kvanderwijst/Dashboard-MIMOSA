@@ -31,10 +31,9 @@ layout = html.Div(
 ## Residual vs gross damage costs
 @app.callback(
     Output("tabs-damages-main-plots", "children"),
-    [Input("plot-selected-store", "data"), Input("plot-timerange", "value")],
+    [Input("plot-data-store", "data"), Input("plot-timerange", "value")],
 )
-def update_damages_plot(names, timerange):
-    databases = data.dataStore.get(names)
+def update_damages_plot(databases, timerange):
     if databases is None or len(databases) == 0:
         raise PreventUpdate
 
@@ -60,10 +59,9 @@ def update_damages_plot(names, timerange):
 ## Adaptation level
 @app.callback(
     Output("tabs-damages-adaptlevel-plot", "figure"),
-    [Input("plot-selected-store", "data"), Input("plot-timerange", "value")],
+    [Input("plot-data-store", "data"), Input("plot-timerange", "value")],
 )
-def update_adaptlevel_plot(names, timerange):
-    databases = data.dataStore.get(names)
+def update_adaptlevel_plot(databases, timerange):
     if databases is None or len(databases) == 0:
         raise PreventUpdate
 
@@ -80,10 +78,9 @@ def update_adaptlevel_plot(names, timerange):
 ## Adaptation costs disaggregation
 @app.callback(
     Output("tabs-damages-adaptcosts-plot", "figure"),
-    [Input("plot-selected-store", "data"), Input("plot-timerange", "value")],
+    [Input("plot-data-store", "data"), Input("plot-timerange", "value")],
 )
-def update_adaptcosts_plot(names, timerange):
-    databases = data.dataStore.get(names)
+def update_adaptcosts_plot(databases, timerange):
     if databases is None or len(databases) == 0:
         raise PreventUpdate
 
@@ -103,10 +100,9 @@ def update_adaptcosts_plot(names, timerange):
 ## Sea level rise
 @app.callback(
     Output("tabs-damages-SLR-plots", "children"),
-    [Input("plot-selected-store", "data"), Input("plot-timerange", "value")],
+    [Input("plot-data-store", "data"), Input("plot-timerange", "value")],
 )
-def update_slr_plot(names, timerange):
-    databases = data.dataStore.get(names)
+def update_slr_plot(databases, timerange):
     if databases is None or len(databases) == 0:
         raise PreventUpdate
 

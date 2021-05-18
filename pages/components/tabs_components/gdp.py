@@ -35,13 +35,12 @@ layout = html.Div(
 @app.callback(
     Output("tabs-GDP-plot", "figure"),
     [
-        Input("plot-selected-store", "data"),
+        Input("plot-data-store", "data"),
         Input("plot-timerange", "value"),
         Input("tabs-GDP-percapita", "value"),
     ],
 )
-def update_gdp_plot(names, timerange, percapita):
-    databases = data.dataStore.get(names)
+def update_gdp_plot(databases, timerange, percapita):
     if databases is None or len(databases) == 0:
         raise PreventUpdate
 
@@ -59,10 +58,9 @@ def update_gdp_plot(names, timerange, percapita):
 ## Carbon prices
 @app.callback(
     Output("tabs-GDP-utility-plot", "figure"),
-    [Input("plot-selected-store", "data"), Input("plot-timerange", "value")],
+    [Input("plot-data-store", "data"), Input("plot-timerange", "value")],
 )
-def update_utility_plot(names, timerange):
-    databases = data.dataStore.get(names)
+def update_utility_plot(databases, timerange):
     if databases is None or len(databases) == 0:
         raise PreventUpdate
 
