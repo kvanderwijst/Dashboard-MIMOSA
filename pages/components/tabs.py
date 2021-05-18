@@ -22,7 +22,7 @@ layout = dbc.Row(
                         dcc.Tab(label="GDP", children=gdp.layout),
                         dcc.Tab(label="Damages", children=damages.layout),
                         dcc.Tab(label="Input parameters", children=inputparams.layout),
-                        dcc.Tab(label="IPOPT output", children="tab-content-6"),
+                        # dcc.Tab(label="IPOPT output", children="tab-content-6"),
                     ]
                 )
             ]
