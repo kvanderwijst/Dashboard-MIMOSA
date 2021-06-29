@@ -6,6 +6,7 @@ the line dash style for each file.
 """
 
 import numpy as np
+import pandas as pd
 
 from app import app
 from common import data
@@ -40,17 +41,14 @@ layout = html.Div(
 )
 
 
-@app.callback(
-    Output("plot-timerange", "max"), [Input("plot-fileselection-filename", "value")]
-)
-def update_range(names):
-    databases = data.dataStore.get(names)
+@app.callback(Output("plot-timerange", "max"), [Input("plot-data-store", "data")])
+def update_range(databases):
     if databases is None or len(databases) == 0:
         raise PreventUpdate
     return min(
         [
             max(
-                single_df["data"]
+                pd.DataFrame(single_df["data"])
                 .drop(columns=["Variable", "Region"])
                 .columns.to_numpy(dtype="float")
             )
