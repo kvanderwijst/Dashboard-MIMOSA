@@ -103,6 +103,9 @@ def param_differences(all_params) -> pd.DataFrame:
         for key in keys_difference
     }
 
+    if len(differences) == 0:
+        return pd.DataFrame(columns=list(all_params.keys()))
+
     return pd.DataFrame(differences).T.sort_index()
 
 
@@ -113,7 +116,14 @@ def recursive_traverse(name, subset, flattened):
             if type(value) == dict:
                 recursive_traverse(newname, value, flattened)
             else:
-                flattened[newname] = str(value)
+                # Check if newname is one of the constraint_variables:
+                if " - constraint_variables - " in newname:
+                    newname_split = newname.split(" - ")
+                    simpler_newname = " - ".join(newname_split[:3])
+                    simpler_value = "(present)"
+                    flattened[simpler_newname] = simpler_value
+                else:
+                    flattened[newname] = str(value)
 
 
 def flatten(dictionary):
