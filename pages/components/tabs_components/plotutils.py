@@ -48,7 +48,7 @@ def create_plot(
         if percapita:
             population_factor = (
                 database[database["Variable"] == "population"]
-                .drop(columns="Variable")
+                .drop(columns=["Variable", "Unit"], errors="ignore")
                 .set_index("Region")
             )
         else:
@@ -63,7 +63,9 @@ def create_plot(
             ]
 
             subselection = (
-                subselection.drop(columns="Variable").set_index("Region")
+                subselection.drop(
+                    columns=["Variable", "Unit"], errors="ignore"
+                ).set_index("Region")
                 / population_factor
             )
 
@@ -88,6 +90,7 @@ def create_plot(
                         "stackgroup": stackgroup.get(variable),
                     }
                 )
+                # TODO: handle units automatically if available
 
     minyear = float(timerange[0])
 

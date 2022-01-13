@@ -49,7 +49,7 @@ def update_range(databases):
         [
             max(
                 pd.DataFrame(single_df["data"])
-                .drop(columns=["Variable", "Region"])
+                .drop(columns=["Variable", "Region", "Unit"], errors="ignore")
                 .columns.to_numpy(dtype="float")
             )
             for single_df in databases.values()
