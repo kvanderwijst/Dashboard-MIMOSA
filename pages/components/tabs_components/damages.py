@@ -73,7 +73,7 @@ def update_adaptlevel_plot(databases, timerange):
         databases,
         ["adapt_level", "SLR_adapt_level"],
         timerange,
-        colors=[4],
+        colors=[4, 5],
         height=params.FIXED_PLOT_HEIGHT,
     )
     return fig
