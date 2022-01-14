@@ -71,7 +71,7 @@ def update_adaptlevel_plot(databases, timerange):
 
     fig = plotutils.create_plot(
         databases,
-        ["adapt_level", "SLR_damages_adapt_level"],
+        ["adapt_level", "SLR_adapt_level"],
         timerange,
         colors=[4],
         height=params.FIXED_PLOT_HEIGHT,
