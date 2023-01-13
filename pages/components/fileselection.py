@@ -1,63 +1,57 @@
-from common.dash import *
-from common import data
+"""
+Provides the file selection dropdown and time range slider.
+
+When multiple files are selected, this also shows a legend with
+the line dash style for each file.
+"""
 
 import numpy as np
+import pandas as pd
 
 from app import app
-
-def all_experiments_options():
-    options = []
-    for path in data.get_all_experiments():
-        filename = path.split(data.DATA_DIRECTORY)[1]
-        options.append({'label': filename, 'value': filename})
-    return options
-
-layout = html.Div([
-    dbc.Row([
-        dbc.Col([html.P('Experiment:')], md=3),
-        dbc.Col([
-            dcc.Dropdown(
-                id="plot-fileselection-filename",
-                options=all_experiments_options()
-            )
-        ]),
-        dbc.Col([dbc.Button('Refresh', color='primary', id='plot-fileselection-refresh')], md=2),
-    ]),
-    html.Br(),
-    dbc.Row([
-        dbc.Col([html.P('Time range:')], md=3),
-        dbc.Col([
-            dcc.RangeSlider(
-                id="plot-timerange",
-                min=2020,
-                max=2100,
-                step=10,
-                value=[2020, 2100],
-                marks={int(x): str(int(x)) for x in np.arange(2020, 2200, 10)}
-            )
-        ]),
-        dbc.Col([], md=2),
-    ]),
-    dcc.Store(id='plot-selected-store')
-])
+from common import data
+from common.dash import dbc, dcc, Input, Output, html, PreventUpdate
+from pages.components import fileupload
 
 
+layout_rangeslider = dcc.RangeSlider(
+    id="plot-timerange",
+    min=2020,
+    max=2100,
+    step=10,
+    value=[2020, 2100],
+    marks={int(x): str(int(x)) for x in np.arange(2020, 2200, 10)},
+)
+layout = html.Div(
+    [
+        dbc.Row(
+            [dbc.Col([html.P("Experiment:")], md=1), dbc.Col([fileupload.layout]),]
+        ),
+        dbc.Row(
+            [
+                dbc.Col([html.P("Time range:")], md=1),
+                dbc.Col([layout_rangeslider]),
+                dbc.Col([], md=2),
+            ],
+            style={"padding-top": "10px"},
+        ),
+        dcc.Store(id="plot-selected-store"),
+        dcc.Store(id="plot-data-store"),
+    ]
+)
 
-@app.callback(
-    Output('plot-selected-store', 'data'),
-    [Input('plot-fileselection-filename', 'value')])
-def update_store(name):
-    # Put database in cache
-    df = data.dataStore.get(name)
-    if df is None:
+
+@app.callback(Output("plot-timerange", "max"), [Input("plot-data-store", "data")])
+def update_range(databases):
+    if databases is None or len(databases) == 0:
         raise PreventUpdate
-    return name
-
-@app.callback(
-    Output('plot-timerange', 'max'),
-    [Input('plot-fileselection-filename', 'value')])
-def update_range(name):
-    df = data.dataStore.get(name)
-    if df is None:
-        raise PreventUpdate
-    return max(df.drop(columns=['Variable', 'Region']).columns.to_numpy(dtype='float'))
+    return min(
+        [
+            max(
+                pd.DataFrame(single_df["data"])
+                .drop(columns=["Variable", "Region", "Unit"], errors="ignore")
+                .columns.to_numpy(dtype="float")
+            )
+            for single_df in databases.values()
+        ]
+    )

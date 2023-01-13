@@ -1,0 +1,6 @@
+"""
+Common parameters
+"""
+
+FIXED_PLOT_HEIGHT = 250
+DEFAULT_PLOT_HEIGHT = 400
