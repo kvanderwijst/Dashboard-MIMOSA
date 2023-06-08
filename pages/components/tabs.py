@@ -9,6 +9,7 @@ from pages.components.tabs_components import (
     damages,
     emissions,
     inputparams,
+    allvariables,
 )
 
 layout = dbc.Row(
@@ -21,6 +22,7 @@ layout = dbc.Row(
                         dcc.Tab(label="Costs", children=costs.layout),
                         dcc.Tab(label="GDP", children=gdp.layout),
                         dcc.Tab(label="Damages", children=damages.layout),
+                        dcc.Tab(label="All variables", children=allvariables.layout),
                         dcc.Tab(label="Input parameters", children=inputparams.layout),
                         # dcc.Tab(label="IPOPT output", children="tab-content-6"),
                     ]
