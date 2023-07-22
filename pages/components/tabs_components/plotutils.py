@@ -24,14 +24,12 @@ def create_plot(
     colors=None,
     percapita=False,
 ):
-
     if stackgroup is None:
         stackgroup = {}
 
     traces = []
 
     for df_i, df_info in enumerate(df_dict.values()):
-
         database = df_info["data"]
         if isinstance(database, dict):
             # t0 = time.time()
@@ -47,7 +45,10 @@ def create_plot(
 
         if percapita:
             population_factor = (
-                database[database["Variable"] == "population"]
+                database[
+                    (database["Variable"] == "population")
+                    & (database["Region"].isin(regions))
+                ]
                 .drop(columns=["Variable", "Unit"], errors="ignore")
                 .set_index("Region")
             )
@@ -55,7 +56,6 @@ def create_plot(
             population_factor = 1
 
         for var_i, (variable, subselection) in enumerate(selection.groupby("Variable")):
-
             # Color list * 3 to get the same colours repeated three times,
             # such that it never runs out of range
             color = (px.colors.qualitative.Plotly * 3)[

@@ -46,7 +46,14 @@ def update_damages_plot(databases, timerange):
         dcc.Graph(
             figure=plotutils.create_plot(
                 {filename: single_df},
-                ["adapt_costs", "resid_damages", "gross_damages", "SLR_damages"],
+                [
+                    "adapt_costs",
+                    "resid_damages",
+                    "damage_costs_slr",
+                    "damage_costs_non_slr",
+                    "gross_damages",
+                    "SLR_damages",
+                ],
                 timerange,
                 stackgroup={"adapt_costs": "costs", "resid_damages": "costs"},
                 yaxis_title="Costs (% GDP)",

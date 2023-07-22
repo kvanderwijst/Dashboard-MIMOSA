@@ -45,10 +45,16 @@ def update_costs_plot(databases, timerange):
         dcc.Graph(
             figure=plotutils.create_plot(
                 {filename: single_df},
-                ["rel_abatement_costs", "damage_costs", "rel_financial_transfer"],  # , "adapt_costs"],
+                [
+                    "rel_abatement_costs",
+                    "rel_mitigation_costs",
+                    "damage_costs",
+                    "rel_financial_transfer",
+                ],  # , "adapt_costs"],
                 timerange,
                 stackgroup={
                     "rel_abatement_costs": "costs",
+                    "rel_mitigation_costs": "costs",
                     "damage_costs": "costs",
                     "rel_financial_transfer": "costs",
                     # "adapt_costs": "costs",
