@@ -6,6 +6,7 @@ variables in different colours.
 """
 
 import time
+import numpy as np
 import pandas as pd
 import plotly.io as pio
 
@@ -93,6 +94,7 @@ def create_plot(
                 # TODO: handle units automatically if available
 
     minyear = float(timerange[0])
+    maxyear = float(timerange[-1])
 
     layout = {
         "grid": {"columns": len(regions), "rows": 1},
@@ -134,7 +136,7 @@ def create_plot(
 
     if len(regions) > 5:
         for i in range(len(regions)):
-            layout[f"xaxis{i+1}"] = {"tickvals": [2020, 2050, 2080]}
+            layout[f"xaxis{i+1}"] = {"nticks": 4}
 
     fig = {
         "data": traces,

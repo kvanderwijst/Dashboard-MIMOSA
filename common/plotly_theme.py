@@ -61,7 +61,7 @@ pio.templates["ipcc"] = go.layout.Template(
                 "xanchor": "left",
                 "x": 0.01,
             },
-            plot_bgcolor="#F5F5F5",
+            plot_bgcolor="#F7F7F7",
             font={
                 "family": FRUTIGER,
                 "size": pt_to_px(7),
