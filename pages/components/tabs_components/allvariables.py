@@ -18,6 +18,15 @@ layout = html.Div(
             options=[],
             multi=True,
         ),
+        dbc.RadioItems(
+            options=[
+                {"label": "Absolute", "value": False},
+                {"label": "Per capita (not for global variables)", "value": True},
+            ],
+            value=False,
+            inline=True,
+            id="tabs-all-variables-percapita1",
+        ),
         dcc.Loading(
             dcc.Graph(id="tabs-all-variables-plot1", className="fixed_height_plot")
         ),
@@ -56,9 +65,10 @@ def update_available_variables(databases):
         Input("plot-data-store", "data"),
         Input("plot-timerange", "value"),
         Input("tabs-all-variables-dropdown1", "value"),
+        Input("tabs-all-variables-percapita1", "value"),
     ],
 )
-def update_plot1(databases, timerange, selected_variables):
+def update_plot1(databases, timerange, selected_variables, percapita):
     if (
         databases is None
         or len(databases) == 0
@@ -73,6 +83,7 @@ def update_plot1(databases, timerange, selected_variables):
         timerange,
         yaxis_title="Value",
         height=params.FIXED_PLOT_HEIGHT,
+        percapita=percapita,
     )
 
     return fig
