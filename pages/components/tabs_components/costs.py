@@ -40,7 +40,7 @@ def update_costs_plot(databases, timerange):
     if databases is None or len(databases) == 0:
         raise PreventUpdate
 
-    height = max(150, params.DEFAULT_PLOT_HEIGHT / len(databases))
+    height = max(250, params.DEFAULT_PLOT_HEIGHT / len(databases))
     figs = [
         dcc.Graph(
             figure=plotutils.create_plot(

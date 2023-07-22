@@ -9,8 +9,8 @@ from pages.components import fileselection, legend, tabs
 
 layout = html.Div(
     [
-        html.H1("Project MIMOSA"),
-        html.H3("Plot results"),
+        html.H1("MIMOSA"),
+        html.H3("Integrated Assessment Model – Plot results"),
         html.Hr(),
         fileselection.layout,
         legend.layout,

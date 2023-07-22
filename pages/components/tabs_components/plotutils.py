@@ -7,9 +7,9 @@ variables in different colours.
 
 import time
 import pandas as pd
-import plotly.express as px
+import plotly.io as pio
 
-from common import params
+from common import params, plotly_theme
 
 
 def create_plot(
@@ -58,7 +58,7 @@ def create_plot(
         for var_i, (variable, subselection) in enumerate(selection.groupby("Variable")):
             # Color list * 3 to get the same colours repeated three times,
             # such that it never runs out of range
-            color = (px.colors.qualitative.Plotly * 3)[
+            color = (plotly_theme.IPCC_COLORS * 3)[
                 var_i if colors is None else colors[var_i]
             ]
 
@@ -94,44 +94,51 @@ def create_plot(
 
     minyear = float(timerange[0])
 
+    layout = {
+        "grid": {"columns": len(regions), "rows": 1},
+        "yaxis1": {
+            "title": yaxis_title + (" (per capita) [UNIT?]" if percapita else "")
+        },
+        "margin": {"l": 50, "r": 20, "t": 30, "b": 30},
+        "legend": {"orientation": "h", "x": 0.5, "xanchor": "center", "y": -0.15},
+        "height": height,
+        "annotations": [
+            {
+                "text": region,
+                "showarrow": False,
+                "xref": "paper",
+                "yref": "paper",
+                "xanchor": "center",
+                "yanchor": "middle",
+                "x": (i + 0.5) / len(regions),
+                "y": 1 + 0.05 * 450 / height,
+                "font": {"size": 16},
+            }
+            for i, region in enumerate(regions)
+        ],
+        "shapes": [
+            {
+                "type": "line",
+                "yref": "paper",
+                "xref": f"x{i+1}",
+                "x0": minyear,
+                "x1": minyear,
+                "y0": 0,
+                "y1": 1,
+                "line": {"width": 1, "color": "#666"},
+            }
+            for i in range(len(regions))
+        ],
+        "template": pio.templates["ipcc"],
+    }
+
+    if len(regions) > 5:
+        for i in range(len(regions)):
+            layout[f"xaxis{i+1}"] = {"tickvals": [2020, 2050, 2080]}
+
     fig = {
         "data": traces,
-        "layout": {
-            "grid": {"columns": len(regions), "rows": 1},
-            "yaxis1": {
-                "title": yaxis_title + (" (per capita) [UNIT?]" if percapita else "")
-            },
-            "margin": {"l": 50, "r": 20, "t": 30, "b": 30},
-            "legend": {"orientation": "h", "x": 0.5, "xanchor": "center", "y": -0.15},
-            "height": height,
-            "annotations": [
-                {
-                    "text": region,
-                    "showarrow": False,
-                    "xref": "paper",
-                    "yref": "paper",
-                    "xanchor": "center",
-                    "yanchor": "middle",
-                    "x": (i + 0.5) / len(regions),
-                    "y": 1 + 0.05 * 450 / height,
-                    "font": {"size": 16},
-                }
-                for i, region in enumerate(regions)
-            ],
-            "shapes": [
-                {
-                    "type": "line",
-                    "yref": "paper",
-                    "xref": f"x{i+1}",
-                    "x0": minyear,
-                    "x1": minyear,
-                    "y0": 0,
-                    "y1": 1,
-                    "line": {"width": 1, "color": "#666"},
-                }
-                for i in range(len(regions))
-            ],
-        },
+        "layout": layout,
     }
 
     if tickformat is not None:
