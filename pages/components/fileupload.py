@@ -23,28 +23,46 @@ def all_experiments_options():
     return options
 
 
+upload_style = {
+    "width": "100%",
+    "height": "60px",
+    "lineHeight": "60px",
+    "borderWidth": "1px",
+    "borderStyle": "dashed",
+    "borderRadius": "5px",
+    "textAlign": "center",
+    "margin": "10px",
+}
+
 layout_upload = html.Div(
     [
-        dcc.Upload(
-            id="upload-data",
-            children=html.Div(
-                [
-                    "Drag and Drop or ",
-                    html.A("Select Files", href="javascript:void(0);"),
-                ]
-            ),
-            style={
-                "width": "100%",
-                "height": "60px",
-                "lineHeight": "60px",
-                "borderWidth": "1px",
-                "borderStyle": "dashed",
-                "borderRadius": "5px",
-                "textAlign": "center",
-                "margin": "10px",
-            },
-            # Allow multiple files to be uploaded
-            multiple=True,
+        dbc.Row(
+            [
+                dbc.Col(
+                    dcc.Upload(
+                        id="upload-data",
+                        children=html.Div(
+                            [
+                                "Drag and Drop or ",
+                                html.A("Select Files", href="javascript:void(0);"),
+                            ]
+                        ),
+                        style=upload_style,
+                        # Allow multiple files to be uploaded
+                        multiple=True,
+                    )
+                ),
+                # dbc.Col(
+                #     dcc.Upload(
+                #         id="upload-data-add-extra",
+                #         children=html.Div("Add to current selection"),
+                #         style=upload_style,
+                #         # Allow multiple files to be uploaded
+                #         multiple=True,
+                #     ),
+                #     md=2,
+                # ),
+            ]
         )
     ],
     style={"padding-top": "10px"},
@@ -52,10 +70,12 @@ layout_upload = html.Div(
 
 
 layout_dropdown = dcc.Dropdown(
-    id="plot-fileselection-filename", options=all_experiments_options(), multi=True,
+    id="plot-fileselection-filename",
+    options=all_experiments_options(),
+    multi=True,
 )
 layout_refreshbutton = dbc.Button(
-    "Refresh", color="primary", id="plot-fileselection-refresh"
+    "Refresh", color="secondary", id="plot-fileselection-refresh"
 )
 
 layout_select = html.P(
@@ -63,15 +83,20 @@ layout_select = html.P(
     style={"padding-top": "10px"},
 )
 
+style = {"active_label_style": {"color": "black"}, "label_style": {"color": "#89a041"}}
+
 layout = html.Div(
     [
         dbc.Tabs(
             [
-                dbc.Tab(layout_upload, label="Upload files", tab_id="files-upload"),
+                dbc.Tab(
+                    layout_upload, label="Upload files", tab_id="files-upload", **style
+                ),
                 dbc.Tab(
                     layout_select,
                     label="Select existing scenarios",
                     tab_id="files-select",
+                    **style
                 ),
             ],
             id="file-select-type",
@@ -194,4 +219,3 @@ def parse_contents(content, filename: str, line_dash):
         # return html.Div(["There was an error processing this file."])
 
     return {"data": df.to_dict(), "meta": {"line_dash": line_dash}}, True
-
