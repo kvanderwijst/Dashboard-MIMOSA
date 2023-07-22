@@ -1,7 +1,7 @@
 """
 The Plot-page consists of the file selection bar, and the tabs containing all the plots
 """
-from common.dash import html
+from common.dash import html, dbc
 
 from pages.components import fileselection, legend, tabs
 
@@ -9,8 +9,30 @@ from pages.components import fileselection, legend, tabs
 
 layout = html.Div(
     [
-        html.H1("MIMOSA"),
-        html.H3("Integrated Assessment Model – Plot results"),
+        dbc.Row(
+            [
+                dbc.Col(
+                    [
+                        html.A(
+                            html.Img(
+                                src="assets/logo.svg",
+                                width=350,
+                                style={"marginTop": "5px"},
+                            ),
+                            href="https://github.com/kvanderwijst/MIMOSA",
+                            target="_blank",
+                        )
+                    ],
+                    style={"flex": "400px 0 0"},
+                ),
+                dbc.Col(
+                    [
+                        html.H1("Dashboard"),
+                        html.H3("Plot results"),
+                    ]
+                ),
+            ]
+        ),
         html.Hr(),
         fileselection.layout,
         legend.layout,

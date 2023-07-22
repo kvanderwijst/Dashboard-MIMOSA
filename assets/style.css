@@ -1,10 +1,22 @@
-body    {overflow-y:scroll;}
+body {
+    overflow-y: scroll;
+}
 
-.h1, h1, .h2, h2, .h3, h3, h4, .h4, h5, .h5 {
+.h1,
+h1,
+.h2,
+h2,
+.h3,
+h3,
+h4,
+.h4,
+h5,
+.h5 {
     font-weight: 300;
 }
 
-.h1, h1 {
+.h1,
+h1 {
     font-size: 3rem;
 }
 
@@ -14,7 +26,7 @@ body    {overflow-y:scroll;}
     padding-bottom: 10px;
 }
 
-.modebar{
+.modebar {
     display: none !important;
 }
 
@@ -24,4 +36,26 @@ hr.lessmargin {
 
 .fixed_height_plot {
     height: 250px;
+}
+
+.rc-slider-track {
+    background-color: #89a041;
+}
+
+.rc-slider-dot-active {
+    border-color: #89a041;
+    border: solid 2px #89a041;
+}
+
+.rc-slider-handle {
+    background-color: #89a041;
+    border-color: #89a041;
+}
+
+.rc-slider-handle:hover {
+    border-color: #89a041;
+}
+
+.rc-slider-handle-active:active {
+    border-color: #89a041;
 }

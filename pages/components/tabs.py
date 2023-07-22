@@ -12,18 +12,44 @@ from pages.components.tabs_components import (
     allvariables,
 )
 
+tab_selected_style = {"borderTop": "2px solid #89a041"}
+
 layout = dbc.Row(
     [
         dbc.Col(
             [
                 dcc.Tabs(
                     [
-                        dcc.Tab(label="Emissions", children=emissions.layout),
-                        dcc.Tab(label="Costs", children=costs.layout),
-                        dcc.Tab(label="GDP", children=gdp.layout),
-                        dcc.Tab(label="Damages", children=damages.layout),
-                        dcc.Tab(label="All variables", children=allvariables.layout),
-                        dcc.Tab(label="Input parameters", children=inputparams.layout),
+                        dcc.Tab(
+                            label="Emissions",
+                            children=emissions.layout,
+                            selected_style=tab_selected_style,
+                        ),
+                        dcc.Tab(
+                            label="Costs",
+                            children=costs.layout,
+                            selected_style=tab_selected_style,
+                        ),
+                        dcc.Tab(
+                            label="GDP",
+                            children=gdp.layout,
+                            selected_style=tab_selected_style,
+                        ),
+                        dcc.Tab(
+                            label="Damages",
+                            children=damages.layout,
+                            selected_style=tab_selected_style,
+                        ),
+                        dcc.Tab(
+                            label="All variables",
+                            children=allvariables.layout,
+                            selected_style=tab_selected_style,
+                        ),
+                        dcc.Tab(
+                            label="Input parameters",
+                            children=inputparams.layout,
+                            selected_style=tab_selected_style,
+                        ),
                         # dcc.Tab(label="IPOPT output", children="tab-content-6"),
                     ]
                 )
