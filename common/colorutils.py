@@ -1,8 +1,8 @@
 """
 Functions to transform between RGB, HEX and HLS and to lighten/darken a color
 """
+
 import colorsys
-import numpy as np
 
 
 def hex_to_rgb(hex_str, normalise=False):
@@ -23,7 +23,7 @@ def hex_to_hls(hex_str):
 
 
 def hls_to_hex(hls):
-    return rgb_to_hex([int(np.round(x * 255)) for x in colorsys.hls_to_rgb(*hls)])
+    return rgb_to_hex([int(round(x * 255)) for x in colorsys.hls_to_rgb(*hls)])
 
 
 def lighten_hex(hex_str, extra_lightness=0.1, extra_saturation=0.0):

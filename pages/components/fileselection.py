@@ -5,7 +5,6 @@ When multiple files are selected, this also shows a legend with
 the line dash style for each file.
 """
 
-import numpy as np
 import pandas as pd
 
 from app import app
@@ -20,12 +19,15 @@ layout_rangeslider = dcc.RangeSlider(
     max=2100,
     step=10,
     value=[2020, 2100],
-    marks={int(x): str(int(x)) for x in np.arange(2020, 2200, 10)},
+    marks={int(x): str(int(x)) for x in range(2020, 2200, 10)},
 )
 layout = html.Div(
     [
         dbc.Row(
-            [dbc.Col([html.P("Experiment:")], md=1), dbc.Col([fileupload.layout]),]
+            [
+                dbc.Col([html.P("Experiment:")], md=1),
+                dbc.Col([fileupload.layout]),
+            ]
         ),
         dbc.Row(
             [

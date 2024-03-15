@@ -5,8 +5,6 @@ then loops over the available regions as subplots and finally loops over the pro
 variables in different colours.
 """
 
-import time
-import numpy as np
 import pandas as pd
 import plotly.io as pio
 
@@ -85,9 +83,12 @@ def create_plot(
                         "name": variable,
                         "legendgroup": variable,
                         "showlegend": region_i == 0 and df_i == 0,
-                        "visible": "legendonly"
-                        if hidden_variables is not None and variable in hidden_variables
-                        else None,
+                        "visible": (
+                            "legendonly"
+                            if hidden_variables is not None
+                            and variable in hidden_variables
+                            else None
+                        ),
                         "stackgroup": stackgroup.get(variable),
                     }
                 )
