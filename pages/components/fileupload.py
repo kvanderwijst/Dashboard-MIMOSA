@@ -44,7 +44,7 @@ layout_upload = html.Div(
                         children=html.Div(
                             [
                                 "Drag and Drop or ",
-                                html.A("Select Files", href="javascript:void(0);"),
+                                html.A("Select Files", href="#"),
                             ]
                         ),
                         style=upload_style,
